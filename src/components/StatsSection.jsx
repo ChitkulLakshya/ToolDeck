@@ -11,7 +11,7 @@ const ToolStatPill = ({ icon: Icon, value, colorClass }) => (
 const StatsSection = () => (
   <section className="bg-white py-12">
     <div className="flex justify-center gap-6">
-      <ToolStatPill icon={QrCode} value="3 Tools" colorClass="bg-cyan-100" />
+      <ToolStatPill icon={QrCode} value="6 Tools" colorClass="bg-cyan-100" />
       <ToolStatPill icon={Users} value="∞ Users" colorClass="bg-pink-100" />
       <ToolStatPill icon={Heart} value="No Cost" colorClass="bg-green-100" />
     </div>

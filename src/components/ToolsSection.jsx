@@ -1,6 +1,7 @@
 import React from "react";
-import { QrCode, MessageSquare, Mail, ArrowRight } from "lucide-react";
+import { QrCode, MessageSquare, Mail, FileText, File } from "lucide-react";
 import { Link } from "react-router-dom"; // use for navigation
+import { ArrowRight } from "lucide-react";
 
 const ToolCard = ({ colorClass, icon: Icon, title, description, to }) => (
   <Link
@@ -24,11 +25,13 @@ export default function ToolsSection() {
   const tools = [
     { title: "QR Code Generator", icon: QrCode, description: "Create QR codes instantly.", colorClass: "bg-pink-100", to: "/qr-code" },
     { title: "WhatsApp Message", icon: MessageSquare, description: "Send WhatsApp messages.", colorClass: "bg-green-100", to: "/whatsapp" },
-    { title: "Email Generator", icon: Mail, description: "Compose professional emails.", colorClass: "bg-purple-100", to: "/email" }
+    { title: "Email Generator", icon: Mail, description: "Compose professional emails.", colorClass: "bg-purple-100", to: "/email" },
+    { title: "PDF Editor", icon: FileText, description: "Edit your PDF files easily.", colorClass: "bg-blue-100", to: "/pdf-editor" },
+    { title: "File Converter", icon: File, description: "Convert files to different formats.", colorClass: "bg-indigo-100", to: "/file-converter" }
   ];
 
   return (
-    <section id="tools" className="py-20 bg-white">
+    <section id="tools" className="py-20 bg-blue-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <h2 className="text-4xl sm:text-5xl font-extrabold text-gray-900 mb-4">
