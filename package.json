@@ -13,6 +13,7 @@
     "lucide-react": "^0.259.0",
     "mammoth": "^1.11.0",
     "nodemailer": "^6.9.4",
+    "ogl": "^1.0.11",
     "pdf-lib": "^1.17.1",
     "pdfjs-dist": "^5.4.296",
     "qrcode.react": "^4.2.0",

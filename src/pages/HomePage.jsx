@@ -87,46 +87,7 @@ const HomePage = () => {
   };
 
   return (
-    <div className="relative overflow-hidden">
-      {/* Animated Background Layers */}
-      <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        {/* Large Gradient Orbs with Parallax */}
-        <div 
-          className="absolute w-[600px] h-[600px] bg-gradient-to-br from-blue-400/20 to-purple-400/20 rounded-full blur-3xl animate-pulse"
-          style={{
-            top: `${20 + mousePosition.y * 0.05}%`,
-            left: `${10 + mousePosition.x * 0.05}%`,
-            transition: 'all 0.3s ease-out',
-          }}
-        ></div>
-        <div 
-          className="absolute w-[700px] h-[700px] bg-gradient-to-br from-pink-400/15 to-blue-400/15 rounded-full blur-3xl animate-pulse"
-          style={{
-            bottom: `${15 + mousePosition.y * 0.03}%`,
-            right: `${15 + mousePosition.x * 0.03}%`,
-            animationDelay: '1s',
-            transition: 'all 0.3s ease-out',
-          }}
-        ></div>
-        <div 
-          className="absolute w-[800px] h-[800px] bg-gradient-to-br from-yellow-400/10 to-pink-400/10 rounded-full blur-3xl animate-pulse"
-          style={{
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
-            animationDelay: '0.5s',
-          }}
-        ></div>
-
-        {/* Grid Pattern Overlay */}
-        <div 
-          className="absolute inset-0 opacity-[0.03]"
-          style={{
-            backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23000000' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
-          }}
-        ></div>
-      </div>
-
+    <div className="relative overflow-hidden bg-[#111827]">
       {/* Floating Particles with Icons */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
         {particlesRef.current.map((particle) => {
@@ -143,7 +104,7 @@ const HomePage = () => {
               }}
             >
               <IconComponent 
-                className="text-blue-400/30" 
+                className="text-[#3B82F6]/20" 
                 size={particle.size * 8}
                 style={{
                   filter: 'blur(0.5px)',
@@ -155,9 +116,9 @@ const HomePage = () => {
       </div>
 
       {/* Scroll Progress Bar */}
-      <div className="fixed top-0 left-0 right-0 h-1 bg-gray-200/50 backdrop-blur-sm z-50">
+      <div className="fixed top-0 left-0 right-0 h-1 bg-[#1F2937] backdrop-blur-sm z-50">
         <div 
-          className="h-full bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 transition-all duration-300 ease-out"
+          className="h-full bg-gradient-to-r from-[#3B82F6] to-[#2DD4BF] transition-all duration-300 ease-out"
           style={{ width: `${scrollProgress}%` }}
         ></div>
       </div>
@@ -168,23 +129,23 @@ const HomePage = () => {
           <HeroSection />
           
           {/* Trust Badges Section */}
-          <section className="relative py-12 bg-white/50 backdrop-blur-sm">
+          <section className="relative py-12 bg-[#111827]">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
               <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
                 {[
-                  { icon: Shield, label: "100% Secure", color: "text-green-600" },
-                  { icon: Zap, label: "Lightning Fast", color: "text-yellow-600" },
-                  { icon: Clock, label: "24/7 Available", color: "text-blue-600" },
-                  { icon: Award, label: "Award Winning", color: "text-purple-600" },
+                  { icon: Shield, label: "100% Secure" },
+                  { icon: Zap, label: "Lightning Fast" },
+                  { icon: Clock, label: "24/7 Available" },
+                  { icon: Award, label: "Award Winning" },
                 ].map((badge, index) => {
                   const IconComponent = badge.icon;
                   return (
                     <div 
                       key={index}
-                      className="flex flex-col items-center justify-center p-4 bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
+                      className="flex flex-col items-center justify-center p-6 bg-[#1F2937] rounded-2xl shadow-lg border border-[#374151] hover:border-[#3B82F6] hover:shadow-xl transition-all duration-300 hover:scale-105"
                     >
-                      <IconComponent className={`w-8 h-8 mb-2 ${badge.color}`} />
-                      <span className="text-sm font-semibold text-gray-700">{badge.label}</span>
+                      <IconComponent className="w-8 h-8 mb-2 text-[#3B82F6]" />
+                      <span className="text-sm font-semibold text-[#F9FAFB]">{badge.label}</span>
                     </div>
                   );
                 })}
@@ -196,9 +157,9 @@ const HomePage = () => {
           <ToolsSection />
 
           {/* Call-to-Action Section */}
-          <section className="relative py-20 bg-gradient-to-br from-blue-600 via-purple-600 to-pink-600 overflow-hidden">
+          <section className="relative py-20 bg-[#1F2937] overflow-hidden border-y border-[#374151]">
             {/* Background Pattern */}
-            <div className="absolute inset-0 opacity-10">
+            <div className="absolute inset-0 opacity-5">
               <div 
                 className="absolute inset-0"
                 style={{
@@ -208,15 +169,15 @@ const HomePage = () => {
             </div>
 
             <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-              <div className="inline-flex items-center px-4 py-2 bg-white/20 backdrop-blur-sm rounded-full text-sm font-medium text-white mb-6">
-                <TrendingUp className="w-4 h-4 mr-2" />
+              <div className="inline-flex items-center px-4 py-2 bg-[#111827] backdrop-blur-sm rounded-full text-sm font-medium text-[#D1D5DB] mb-6 border border-[#374151]">
+                <TrendingUp className="w-4 h-4 mr-2 text-[#3B82F6]" />
                 <span>Join Thousands of Happy Users</span>
               </div>
 
-              <h2 className="text-4xl sm:text-5xl font-extrabold text-white mb-6">
+              <h2 className="text-4xl sm:text-5xl font-extrabold text-[#F9FAFB] mb-6">
                 Ready to Supercharge Your Productivity?
               </h2>
-              <p className="text-xl text-white/90 mb-8 max-w-2xl mx-auto">
+              <p className="text-xl text-[#D1D5DB] mb-8 max-w-2xl mx-auto">
                 Get started with ToolDeck today and experience the future of productivity tools.
               </p>
 
@@ -227,28 +188,27 @@ const HomePage = () => {
                     smooth: "easeInOutQuart",
                     offset: -80,
                   })}
-                  className="group relative px-8 py-4 bg-white text-blue-600 font-semibold rounded-2xl text-lg shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 overflow-hidden"
+                  className="group relative px-8 py-4 bg-[#3B82F6] text-white font-semibold rounded-2xl text-lg shadow-xl hover:shadow-2xl hover:bg-[#2563EB] transition-all duration-300 hover:scale-105 overflow-hidden"
                 >
-                  <div className="absolute inset-0 bg-gradient-to-r from-blue-50 to-purple-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                   <div className="relative flex items-center justify-center">
                     <span>Explore Tools</span>
                     <Sparkles className="ml-3 w-5 h-5 group-hover:rotate-12 transition-transform duration-300" />
                   </div>
                 </button>
 
-                <button className="px-8 py-4 bg-white/10 backdrop-blur-sm text-white font-semibold rounded-2xl text-lg border-2 border-white/30 hover:border-white/50 hover:bg-white/20 transition-all duration-300 hover:scale-105">
+                <button className="px-8 py-4 bg-[#111827] backdrop-blur-sm text-[#F9FAFB] font-semibold rounded-2xl text-lg border-2 border-[#374151] hover:border-[#3B82F6] hover:bg-[#1F2937] transition-all duration-300 hover:scale-105">
                   Learn More
                 </button>
               </div>
 
               {/* Social Proof */}
-              <div className="mt-12 flex items-center justify-center gap-8 text-white/80">
+              <div className="mt-12 flex flex-col sm:flex-row items-center justify-center gap-8 text-[#D1D5DB]">
                 <div className="flex items-center gap-2">
                   <div className="flex -space-x-2">
                     {[...Array(4)].map((_, i) => (
                       <div 
                         key={i}
-                        className="w-10 h-10 rounded-full border-2 border-white bg-gradient-to-br from-blue-400 to-purple-400"
+                        className="w-10 h-10 rounded-full border-2 border-[#1F2937] bg-gradient-to-br from-[#3B82F6] to-[#2DD4BF]"
                       ></div>
                     ))}
                   </div>
@@ -257,7 +217,7 @@ const HomePage = () => {
                 <div className="flex items-center gap-2">
                   <div className="flex gap-1">
                     {[...Array(5)].map((_, i) => (
-                      <Star key={i} className="w-5 h-5 fill-yellow-400 text-yellow-400" />
+                      <Star key={i} className="w-5 h-5 fill-[#3B82F6] text-[#3B82F6]" />
                     ))}
                   </div>
                   <span className="text-sm font-medium">4.9/5 Rating</span>
@@ -272,7 +232,7 @@ const HomePage = () => {
       {showScrollTop && (
         <button
           onClick={scrollToTop}
-          className="fixed bottom-8 right-8 z-50 w-14 h-14 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-full shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-110 group"
+          className="fixed bottom-8 right-8 z-50 w-14 h-14 bg-[#3B82F6] text-white rounded-full shadow-xl hover:shadow-2xl hover:bg-[#2563EB] transition-all duration-300 hover:scale-110 group"
           style={{
             animation: 'bounce 2s infinite',
           }}
