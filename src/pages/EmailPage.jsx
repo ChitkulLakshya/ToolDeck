@@ -1,4 +1,5 @@
 import React, { useState, useRef } from "react";
+import { generateEmail, sendEmail } from "../api/api";
 import { 
   Mail, 
   Upload, 
@@ -79,7 +80,7 @@ const EmailPage = () => {
     setAttachments(files);
   };
 
-  // Generate AI email
+  // Generate AI email using API utility
   const generateAIEmail = async () => {
     if (!eventImage && !context) {
       alert("Please upload an event image or provide context");
@@ -90,26 +91,14 @@ const EmailPage = () => {
     setStatusMessage("🤖 AI is analyzing your event...");
 
     try {
-      const formData = new FormData();
-      if (eventImage) {
-        formData.append("eventImage", eventImage);
-      }
-      formData.append("context", context);
-
-      const response = await fetch("http://localhost:5000/api/email/generate", {
-        method: "POST",
-        body: formData,
+      const result = await generateEmail({
+        eventImage,
+        context
       });
-
-      if (!response.ok) {
-        throw new Error("Failed to generate email");
-      }
-
-      const data = await response.json();
       
       setGeneratedEmail({
-        subject: data.subject,
-        body: data.body
+        subject: result.subject,
+        body: result.body
       });
       
       setShowPreview(true);
@@ -123,8 +112,8 @@ const EmailPage = () => {
     }
   };
 
-  // Send email
-  const sendEmail = async () => {
+  // Send email using API utility
+  const sendEmailHandler = async () => {
     if (!generatedEmail.subject || !generatedEmail.body) {
       alert("Please generate an email first");
       return;
@@ -149,35 +138,18 @@ const EmailPage = () => {
     setStatusMessage("📧 Sending email...");
 
     try {
-      const formData = new FormData();
-      formData.append("senderEmail", senderEmail);
-      formData.append("senderName", senderName);
-      formData.append("subject", generatedEmail.subject);
-      formData.append("body", generatedEmail.body);
-      formData.append("sendMode", sendMode);
-
-      if (sendMode === "single") {
-        formData.append("recipientEmail", recipientEmail);
-      } else {
-        formData.append("csvFile", csvFile);
-      }
-
-      // Add attachments
-      attachments.forEach((file, index) => {
-        formData.append(`attachment${index}`, file);
+      const result = await sendEmail({
+        senderEmail,
+        senderName,
+        subject: generatedEmail.subject,
+        body: generatedEmail.body,
+        sendMode,
+        recipientEmail: sendMode === "single" ? recipientEmail : undefined,
+        csvFile: sendMode === "bulk" ? csvFile : undefined,
+        attachments
       });
 
-      const response = await fetch("http://localhost:5000/api/email/send", {
-        method: "POST",
-        body: formData,
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to send email");
-      }
-
-      const data = await response.json();
-      setStatusMessage(`✅ ${data.message}`);
+      setStatusMessage(`✅ ${result.message}`);
       
       // Reset form after successful send
       setTimeout(() => {
@@ -520,7 +492,7 @@ const EmailPage = () => {
                 {/* Send Button */}
                 <div className="flex gap-3">
                   <button
-                    onClick={sendEmail}
+                    onClick={sendEmailHandler}
                     disabled={isSending}
                     className="flex-1 flex items-center justify-center gap-2 py-4 bg-gradient-to-r from-green-500 to-emerald-500 text-white font-semibold rounded-2xl text-lg hover:from-green-600 hover:to-emerald-600 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl"
                   >
