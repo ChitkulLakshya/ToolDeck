@@ -1,4 +1,5 @@
 import React, { useRef, useState } from 'react';
+import { useToast } from '../contexts/ToastContext';
 import { Tldraw } from 'tldraw';
 import * as pdfjsLib from 'pdfjs-dist';
 import { PDFDocument, rgb } from 'pdf-lib';
@@ -9,7 +10,7 @@ import 'tldraw/tldraw.css';
 pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdn.jsdelivr.net/npm/pdfjs-dist@${pdfjsLib.version}/build/pdf.worker.min.mjs`;
 
 // Component for toolbar controls - no longer needs to be inside Tldraw
-const PDFEditorControls = ({ editor, onFileLoaded }) => {
+const PDFEditorControls = ({ editor, onFileLoaded, toast }) => {
   const originalPdfFileRef = useRef(null);
   const fileInputRef = useRef(null);
 
@@ -20,7 +21,7 @@ const PDFEditorControls = ({ editor, onFileLoaded }) => {
     // Validate file type
     if (file.type !== 'application/pdf') {
       console.error('Please select a valid PDF file');
-      alert('Please select a valid PDF file');
+      toast.error('Please select a valid PDF file');
       return;
     }
 
@@ -159,9 +160,10 @@ const PDFEditorControls = ({ editor, onFileLoaded }) => {
       editor.zoomToFit();
       
       console.log('PDF loaded successfully:', numPages, 'pages');
+      toast.success(`PDF loaded successfully: ${numPages} page(s)`);
     } catch (error) {
       console.error('Error loading PDF:', error);
-      alert('Failed to load PDF. Please make sure it is a valid PDF file and try again.');
+      toast.error('Failed to load PDF. Please make sure it is a valid PDF file and try again.');
       // Reset state if loading failed
       onFileLoaded(false);
       originalPdfFileRef.current = null;
@@ -251,9 +253,10 @@ const PDFEditorControls = ({ editor, onFileLoaded }) => {
       URL.revokeObjectURL(url);
 
       console.log('PDF saved successfully:', pages.length, 'pages');
+      toast.success(`PDF saved successfully: ${pages.length} page(s)`);
     } catch (error) {
       console.error('Error saving PDF:', error);
-      alert('Failed to save PDF. Please try again.');
+      toast.error('Failed to save PDF. Please try again.');
     }
   };
 
@@ -368,6 +371,7 @@ const PDFEditorControls = ({ editor, onFileLoaded }) => {
 };
 
 const PDFEditorPage = () => {
+  const toast = useToast();
   const [pdfLoaded, setPdfLoaded] = useState(false);
   const [editor, setEditor] = useState(null);
 
@@ -379,7 +383,7 @@ const PDFEditorPage = () => {
       flexDirection: 'column',
       paddingTop: '64px', // Account for fixed header
     }}>
-      <PDFEditorControls editor={editor} onFileLoaded={setPdfLoaded} />
+      <PDFEditorControls editor={editor} onFileLoaded={setPdfLoaded} toast={toast} />
       
       <div style={{ 
         flexGrow: 1,

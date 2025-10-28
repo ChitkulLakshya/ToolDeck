@@ -1,4 +1,6 @@
 import React, { useState, useRef, useCallback } from "react";
+import { useToast } from "../contexts/ToastContext";
+import { OverlayLoader } from "../components/LoadingSpinner";
 import { PDFDocument, rgb } from "pdf-lib";
 import { saveAs } from "file-saver";
 import html2canvas from "html2canvas";
@@ -27,6 +29,7 @@ import {
 } from "lucide-react";
 
 const FileConverterPage = () => {
+  const toast = useToast();
   const [file, setFile] = useState(null);
   const [convertedFileUrl, setConvertedFileUrl] = useState("");
   const [outputMessage, setOutputMessage] = useState("");
@@ -103,6 +106,8 @@ const FileConverterPage = () => {
     setConvertedFileUrl("");
     setOutputMessage("");
     setConversionProgress(0);
+    
+    toast.info(`File uploaded: ${selectedFile.name} (${(selectedFile.size / 1024).toFixed(2)} KB)`);
     
     // Generate preview for images
     if (selectedFile.type.startsWith("image/")) {
@@ -524,6 +529,7 @@ const FileConverterPage = () => {
       
       const duration = ((Date.now() - startTime) / 1000).toFixed(2);
       setOutputMessage(`✅ Successfully converted ${file.name} to ${convertType.toUpperCase()} in ${duration}s!`);
+      toast.success(`✅ Successfully converted ${file.name} to ${convertType.toUpperCase()} in ${duration}s!`);
       
       setConversionProgress(100);
       
@@ -539,6 +545,7 @@ const FileConverterPage = () => {
     } catch (err) {
       console.error(err);
       setOutputMessage(`❌ Error: ${err.message}`);
+      toast.error(`Conversion failed: ${err.message}`);
       setConversionProgress(0);
     } finally {
       setIsConverting(false);

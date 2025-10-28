@@ -1,4 +1,5 @@
 import React, { useState, useRef } from "react";
+import { useToast } from "../contexts/ToastContext";
 import { 
   MessageSquare, 
   Send, 
@@ -17,6 +18,7 @@ import {
 } from "lucide-react";
 
 const WhatsappPage = () => {
+  const toast = useToast();
   const [preview, setPreview] = useState("");
   const [isSending, setIsSending] = useState(false);
   const [showPreview, setShowPreview] = useState(false);
@@ -234,7 +236,7 @@ const WhatsappPage = () => {
   const copyMessageTemplate = () => {
     const template = "Hi! I'm reaching out from [Your Organization]. We'd love to connect with you!";
     navigator.clipboard.writeText(template);
-    alert("Message template copied to clipboard!");
+    toast.success("Message template copied to clipboard!");
   };
 
   const formatPhoneNumber = (value) => {
