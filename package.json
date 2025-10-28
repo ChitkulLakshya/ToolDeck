@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@sendgrid/mail": "^8.1.6",
+    "axios": "^1.13.0",
     "browser-image-compression": "^2.0.2",
     "docx-pdf": "^0.0.1",
     "file-saver": "^2.0.5",
