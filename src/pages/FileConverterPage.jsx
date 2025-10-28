@@ -68,8 +68,8 @@ const FileConverterPage = () => {
     const selectedFile = e.target.files[0];
     if (selectedFile) {
       setFile(selectedFile);
-      setConvertedFileUrl("");
-      setOutputMessage("");
+    setConvertedFileUrl("");
+    setOutputMessage("");
       
       // Auto-select appropriate conversion type
       const category = getFileCategory(selectedFile.type);
@@ -109,16 +109,16 @@ const FileConverterPage = () => {
 
   const convertImage = async (file, targetFormat) => {
     return new Promise((resolve) => {
-      const img = new Image();
-      img.onload = () => {
-        const canvas = document.createElement("canvas");
-        canvas.width = img.width;
-        canvas.height = img.height;
-        const ctx = canvas.getContext("2d");
-        ctx.drawImage(img, 0, 0);
+        const img = new Image();
+        img.onload = () => {
+          const canvas = document.createElement("canvas");
+          canvas.width = img.width;
+          canvas.height = img.height;
+          const ctx = canvas.getContext("2d");
+          ctx.drawImage(img, 0, 0);
 
-        canvas.toBlob(
-          (blob) => {
+          canvas.toBlob(
+            (blob) => {
             resolve(blob);
           },
           `image/${targetFormat}`,
@@ -151,9 +151,9 @@ const FileConverterPage = () => {
 
   const convertPDFToImage = async (file) => {
     // This is a simplified version - in production you'd use pdf.js or similar
-    const arrayBuffer = await file.arrayBuffer();
-    const pdfDoc = await PDFDocument.load(arrayBuffer);
-    const page = pdfDoc.getPage(0);
+        const arrayBuffer = await file.arrayBuffer();
+        const pdfDoc = await PDFDocument.load(arrayBuffer);
+        const page = pdfDoc.getPage(0);
     
     // For now, we'll create a placeholder
     const canvas = document.createElement("canvas");
@@ -363,14 +363,14 @@ const FileConverterPage = () => {
                 <Settings className="w-4 h-4" />
                 Settings
               </button>
-            </div>
+        </div>
 
-            <form onSubmit={convertFile} className="space-y-6">
+        <form onSubmit={convertFile} className="space-y-6">
               {/* File Upload Area */}
-              <div>
+          <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-3">
-                  Upload File
-                </label>
+              Upload File
+            </label>
                 <div
                   className={`relative border-2 border-dashed rounded-2xl p-8 text-center transition-all ${
                     dragActive 
@@ -382,13 +382,13 @@ const FileConverterPage = () => {
                   onDragOver={handleDrag}
                   onDrop={handleDrop}
                 >
-                  <input
+            <input
                     ref={fileInputRef}
-                    type="file"
-                    onChange={handleFileChange}
+              type="file"
+              onChange={handleFileChange}
                     className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                    required
-                  />
+              required
+            />
                   <div className="space-y-4">
                     <div className="w-16 h-16 bg-gray-100 rounded-2xl flex items-center justify-center mx-auto">
                       <Upload className="w-8 h-8 text-gray-400" />
@@ -409,13 +409,13 @@ const FileConverterPage = () => {
                     )}
                   </div>
                 </div>
-              </div>
+          </div>
 
               {/* Conversion Type Selection */}
-              <div>
+          <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-3">
-                  Convert To
-                </label>
+              Convert To
+            </label>
                 <div className="grid grid-cols-2 gap-3">
                   {getAvailableConversions().map((option) => {
                     const IconComponent = option.icon;
@@ -468,8 +468,8 @@ const FileConverterPage = () => {
                         })}
                         className="w-full"
                       />
-                    </div>
-                    
+          </div>
+
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
                         Compression Level: {Math.round(conversionSettings.compressionLevel * 100)}%
@@ -493,8 +493,8 @@ const FileConverterPage = () => {
 
               {/* Action Buttons */}
               <div className="flex gap-3">
-                <button
-                  type="submit"
+          <button
+            type="submit"
                   disabled={!file || isConverting}
                   className="flex-1 flex items-center justify-center gap-2 py-4 bg-gradient-to-r from-blue-500 to-purple-500 text-white font-semibold rounded-2xl text-lg hover:from-blue-600 hover:to-purple-600 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                 >
@@ -506,7 +506,7 @@ const FileConverterPage = () => {
                   ) : (
                     <>
                       <Zap className="w-5 h-5" />
-                      Convert File
+            Convert File
                     </>
                   )}
                 </button>
@@ -518,10 +518,10 @@ const FileConverterPage = () => {
                     className="px-6 py-4 bg-gray-100 text-gray-700 font-semibold rounded-2xl hover:bg-gray-200 transition-colors"
                   >
                     <RefreshCw className="w-5 h-5" />
-                  </button>
+          </button>
                 )}
               </div>
-            </form>
+        </form>
           </div>
 
           {/* Results Section */}
