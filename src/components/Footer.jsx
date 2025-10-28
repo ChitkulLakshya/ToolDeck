@@ -8,7 +8,7 @@ const Footer = () => {
   };
 
   return (
-    <footer className="relative bg-[#111827] text-white overflow-hidden border-t border-[#374151]">
+    <footer className="relative bg-background text-white overflow-hidden border-t border-border">
       {/* Background Pattern */}
       <div className="absolute inset-0 opacity-5">
         <div 
@@ -24,17 +24,17 @@ const Footer = () => {
           {/* Brand Section */}
           <div className="md:col-span-2">
             <div className="flex items-center space-x-3 mb-6">
-              <div className="w-10 h-10 bg-[#3B82F6] rounded-xl flex items-center justify-center">
+              <div className="w-10 h-10 bg-primary-accent rounded-xl flex items-center justify-center">
                 <span className="text-white font-bold text-lg">TD</span>
               </div>
-              <span className="text-2xl font-bold bg-gradient-to-r from-[#3B82F6] to-[#2DD4BF] bg-clip-text text-transparent">
+              <span className="text-2xl font-bold bg-gradient-to-r from-primary-accent to-secondary-accent bg-clip-text text-transparent">
                 ToolDeck
               </span>
             </div>
-            <p className="text-[#D1D5DB] text-lg mb-6 max-w-md">
+            <p className="text-text-body text-lg mb-6 max-w-md">
               Your all-in-one toolkit for productivity. Simple, powerful tools designed to make your life easier.
             </p>
-            <div className="flex items-center space-x-2 text-[#D1D5DB]">
+            <div className="flex items-center space-x-2 text-text-body">
               <span>Made with</span>
               <Heart className="w-5 h-5 text-red-500 animate-pulse" />
               <span>by the ToolDeck Team</span>
@@ -43,25 +43,25 @@ const Footer = () => {
 
           {/* Quick Links */}
           <div>
-            <h3 className="text-lg font-semibold mb-4 text-[#F9FAFB]">Quick Links</h3>
+            <h3 className="text-lg font-semibold mb-4 text-text-heading">Quick Links</h3>
             <ul className="space-y-3">
               <li>
-                <Link to="/" className="text-[#D1D5DB] hover:text-[#3B82F6] transition-colors duration-200">
+                <Link to="/" className="text-text-body hover:text-primary-accent transition-colors duration-200">
                   Home
                 </Link>
               </li>
               <li>
-                <Link to="/qr-code" className="text-[#D1D5DB] hover:text-[#3B82F6] transition-colors duration-200">
+                <Link to="/qr-code" className="text-text-body hover:text-primary-accent transition-colors duration-200">
                   QR Generator
                 </Link>
               </li>
               <li>
-                <Link to="/file-converter" className="text-[#D1D5DB] hover:text-[#3B82F6] transition-colors duration-200">
+                <Link to="/file-converter" className="text-text-body hover:text-primary-accent transition-colors duration-200">
                   File Converter
                 </Link>
               </li>
               <li>
-                <Link to="/pdf-editor" className="text-[#D1D5DB] hover:text-[#3B82F6] transition-colors duration-200">
+                <Link to="/pdf-editor" className="text-text-body hover:text-primary-accent transition-colors duration-200">
                   PDF Editor
                 </Link>
               </li>
@@ -70,42 +70,42 @@ const Footer = () => {
 
           {/* Connect */}
           <div>
-            <h3 className="text-lg font-semibold mb-4 text-[#F9FAFB]">Connect</h3>
+            <h3 className="text-lg font-semibold mb-4 text-text-heading">Connect</h3>
             <div className="flex space-x-4 mb-4">
               <a 
                 href="#" 
-                className="w-10 h-10 bg-[#1F2937] hover:bg-[#3B82F6] border border-[#374151] rounded-lg flex items-center justify-center transition-colors duration-200 group"
+                className="w-10 h-10 bg-card-background hover:bg-primary-accent border border-border rounded-lg flex items-center justify-center transition-colors duration-200 group"
               >
                 <Github className="w-5 h-5 group-hover:scale-110 transition-transform" />
               </a>
               <a 
                 href="#" 
-                className="w-10 h-10 bg-[#1F2937] hover:bg-[#3B82F6] border border-[#374151] rounded-lg flex items-center justify-center transition-colors duration-200 group"
+                className="w-10 h-10 bg-card-background hover:bg-primary-accent border border-border rounded-lg flex items-center justify-center transition-colors duration-200 group"
               >
                 <Twitter className="w-5 h-5 group-hover:scale-110 transition-transform" />
               </a>
               <a 
                 href="#" 
-                className="w-10 h-10 bg-[#1F2937] hover:bg-[#3B82F6] border border-[#374151] rounded-lg flex items-center justify-center transition-colors duration-200 group"
+                className="w-10 h-10 bg-card-background hover:bg-primary-accent border border-border rounded-lg flex items-center justify-center transition-colors duration-200 group"
               >
                 <Mail className="w-5 h-5 group-hover:scale-110 transition-transform" />
               </a>
             </div>
-            <p className="text-[#D1D5DB]/70 text-sm">
+            <p className="text-text-muted text-sm">
               Follow us for updates and new tools
             </p>
           </div>
         </div>
 
         {/* Bottom Section */}
-        <div className="border-t border-[#374151] mt-12 pt-8 flex flex-col md:flex-row justify-between items-center">
-          <div className="text-[#D1D5DB]/70 text-sm mb-4 md:mb-0">
+        <div className="border-t border-border mt-12 pt-8 flex flex-col md:flex-row justify-between items-center">
+          <div className="text-text-muted text-sm mb-4 md:mb-0">
             &copy; 2025 ToolDeck. All rights reserved. Built with modern web technologies.
           </div>
           
           <button
             onClick={scrollToTop}
-            className="flex items-center space-x-2 bg-[#3B82F6] hover:bg-[#2563EB] px-4 py-2 rounded-lg transition-all duration-200 group"
+            className="flex items-center space-x-2 bg-primary-accent hover:opacity-90 px-4 py-2 rounded-lg transition-all duration-200 group"
           >
             <span className="text-sm font-medium">Back to Top</span>
             <ArrowUp className="w-4 h-4 group-hover:-translate-y-1 transition-transform" />

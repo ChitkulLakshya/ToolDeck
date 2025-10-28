@@ -12,33 +12,33 @@ const TestimonialCard = ({ quote, name, title, rating, delay = 0 }) => {
   }, [delay]);
 
   return (
-    <div className={`group relative p-8 bg-[#1F2937] rounded-3xl shadow-lg border border-[#374151] hover:border-[#3B82F6] hover:shadow-2xl transition-all duration-500 hover:scale-105 ${
+    <div className={`group relative p-8 bg-card-background rounded-3xl shadow-lg border border-border hover:border-primary-accent hover:shadow-2xl transition-all duration-500 hover:scale-105 ${
       isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
     }`}>
       {/* Background Gradient Overlay */}
-      <div className="absolute inset-0 bg-gradient-to-br from-[#3B82F6]/10 to-transparent rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+      <div className="absolute inset-0 bg-gradient-to-br from-primary-accent/10 to-transparent rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
       
       {/* Quote Icon */}
       <div className="relative mb-4">
-        <Quote className="w-8 h-8 text-[#3B82F6] opacity-50" />
+        <Quote className="w-8 h-8 text-primary-accent opacity-50" />
       </div>
       
       {/* Rating */}
       <div className="flex gap-1 mb-4">
         {[...Array(rating)].map((_, i) => (
-          <Star key={i} className="w-4 h-4 fill-[#3B82F6] text-[#3B82F6]" />
+          <Star key={i} className="w-4 h-4 fill-primary-accent text-primary-accent" />
         ))}
       </div>
       
       {/* Quote Text */}
-      <p className="text-[#D1D5DB] mb-6 leading-relaxed italic relative z-10">
+      <p className="text-text-body mb-6 leading-relaxed italic relative z-10">
         "{quote}"
       </p>
       
       {/* Author Info */}
       <div className="relative z-10">
-        <div className="font-semibold text-[#F9FAFB]">{name}</div>
-        <div className="text-sm text-[#D1D5DB]/70">{title}</div>
+        <div className="font-semibold text-text-heading">{name}</div>
+        <div className="text-sm text-text-muted">{title}</div>
       </div>
     </div>
   );
@@ -86,11 +86,11 @@ const StatsSection = () => {
   ];
 
   return (
-    <section className="relative bg-[#111827] py-20 overflow-hidden">
+    <section className="relative bg-background py-20 overflow-hidden">
       {/* Background Elements */}
       <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute top-20 right-10 w-32 h-32 bg-[#3B82F6] rounded-full opacity-5 blur-3xl animate-pulse"></div>
-        <div className="absolute bottom-20 left-10 w-40 h-40 bg-[#2DD4BF] rounded-full opacity-5 blur-3xl animate-pulse delay-1000"></div>
+        <div className="absolute top-20 right-10 w-32 h-32 bg-primary-accent rounded-full opacity-5 blur-3xl animate-pulse"></div>
+        <div className="absolute bottom-20 left-10 w-40 h-40 bg-secondary-accent rounded-full opacity-5 blur-3xl animate-pulse delay-1000"></div>
       </div>
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -98,15 +98,15 @@ const StatsSection = () => {
         <div className={`text-center mb-16 transition-all duration-700 ${
           isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
         }`}>
-          <div className="inline-flex items-center px-4 py-2 bg-[#1F2937] backdrop-blur-sm rounded-full text-sm font-medium text-[#D1D5DB] mb-6 shadow-lg border border-[#374151]">
-            <Star className="w-4 h-4 text-[#3B82F6] mr-2" />
+          <div className="inline-flex items-center px-4 py-2 bg-card-background backdrop-blur-sm rounded-full text-sm font-medium text-text-body mb-6 shadow-lg border border-border">
+            <Star className="w-4 h-4 text-primary-accent mr-2" />
             <span>User Testimonials</span>
           </div>
           
-          <h2 className="text-4xl sm:text-5xl font-bold text-[#F9FAFB] mb-4">
-            Loved by <span className="bg-gradient-to-r from-[#3B82F6] to-[#2DD4BF] bg-clip-text text-transparent">thousands</span>
+          <h2 className="text-4xl sm:text-5xl font-bold text-text-heading mb-4">
+            Loved by <span className="bg-gradient-to-r from-primary-accent to-secondary-accent bg-clip-text text-transparent">thousands</span>
           </h2>
-          <p className="text-xl text-[#D1D5DB] max-w-3xl mx-auto">
+          <p className="text-xl text-text-body max-w-3xl mx-auto">
             See what our users have to say about ToolDeck
           </p>
         </div>

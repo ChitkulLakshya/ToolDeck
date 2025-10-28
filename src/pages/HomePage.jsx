@@ -87,7 +87,7 @@ const HomePage = () => {
   };
 
   return (
-    <div className="relative overflow-hidden bg-[#111827]">
+    <div className="relative overflow-hidden bg-background">
       {/* Floating Particles with Icons */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
         {particlesRef.current.map((particle) => {
@@ -104,7 +104,7 @@ const HomePage = () => {
               }}
             >
               <IconComponent 
-                className="text-[#3B82F6]/20" 
+                className="text-primary-accent/20" 
                 size={particle.size * 8}
                 style={{
                   filter: 'blur(0.5px)',
@@ -116,9 +116,9 @@ const HomePage = () => {
       </div>
 
       {/* Scroll Progress Bar */}
-      <div className="fixed top-0 left-0 right-0 h-1 bg-[#1F2937] backdrop-blur-sm z-50">
+      <div className="fixed top-0 left-0 right-0 h-1 bg-card-background backdrop-blur-sm z-50">
         <div 
-          className="h-full bg-gradient-to-r from-[#3B82F6] to-[#2DD4BF] transition-all duration-300 ease-out"
+          className="h-full bg-gradient-to-r from-primary-accent to-secondary-accent transition-all duration-300 ease-out"
           style={{ width: `${scrollProgress}%` }}
         ></div>
       </div>
@@ -129,7 +129,7 @@ const HomePage = () => {
           <HeroSection />
           
           {/* Trust Badges Section */}
-          <section className="relative py-12 bg-[#111827]">
+          <section className="relative py-12 bg-background">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
               <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
                 {[
@@ -142,10 +142,10 @@ const HomePage = () => {
                   return (
                     <div 
                       key={index}
-                      className="flex flex-col items-center justify-center p-6 bg-[#1F2937] rounded-2xl shadow-lg border border-[#374151] hover:border-[#3B82F6] hover:shadow-xl transition-all duration-300 hover:scale-105"
+                      className="flex flex-col items-center justify-center p-6 bg-card-background rounded-2xl shadow-lg border border-border hover:border-primary-accent hover:shadow-xl transition-all duration-300 hover:scale-105"
                     >
-                      <IconComponent className="w-8 h-8 mb-2 text-[#3B82F6]" />
-                      <span className="text-sm font-semibold text-[#F9FAFB]">{badge.label}</span>
+                      <IconComponent className="w-8 h-8 mb-2 text-primary-accent" />
+                      <span className="text-sm font-semibold text-text-heading">{badge.label}</span>
                     </div>
                   );
                 })}
@@ -157,7 +157,7 @@ const HomePage = () => {
           <ToolsSection />
 
           {/* Call-to-Action Section */}
-          <section className="relative py-20 bg-[#1F2937] overflow-hidden border-y border-[#374151]">
+          <section className="relative py-20 bg-card-background overflow-hidden border-y border-border">
             {/* Background Pattern */}
             <div className="absolute inset-0 opacity-5">
               <div 
@@ -169,15 +169,15 @@ const HomePage = () => {
             </div>
 
             <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-              <div className="inline-flex items-center px-4 py-2 bg-[#111827] backdrop-blur-sm rounded-full text-sm font-medium text-[#D1D5DB] mb-6 border border-[#374151]">
-                <TrendingUp className="w-4 h-4 mr-2 text-[#3B82F6]" />
+              <div className="inline-flex items-center px-4 py-2 bg-background backdrop-blur-sm rounded-full text-sm font-medium text-text-body mb-6 border border-border">
+                <TrendingUp className="w-4 h-4 mr-2 text-primary-accent" />
                 <span>Join Thousands of Happy Users</span>
               </div>
 
-              <h2 className="text-4xl sm:text-5xl font-extrabold text-[#F9FAFB] mb-6">
+              <h2 className="text-4xl sm:text-5xl font-extrabold text-text-heading mb-6">
                 Ready to Supercharge Your Productivity?
               </h2>
-              <p className="text-xl text-[#D1D5DB] mb-8 max-w-2xl mx-auto">
+              <p className="text-xl text-text-body mb-8 max-w-2xl mx-auto">
                 Get started with ToolDeck today and experience the future of productivity tools.
               </p>
 
@@ -188,7 +188,7 @@ const HomePage = () => {
                     smooth: "easeInOutQuart",
                     offset: -80,
                   })}
-                  className="group relative px-8 py-4 bg-[#3B82F6] text-white font-semibold rounded-2xl text-lg shadow-xl hover:shadow-2xl hover:bg-[#2563EB] transition-all duration-300 hover:scale-105 overflow-hidden"
+                  className="group relative px-8 py-4 bg-primary-accent text-white font-semibold rounded-2xl text-lg shadow-xl hover:shadow-2xl hover:opacity-90 transition-all duration-300 hover:scale-105 overflow-hidden"
                 >
                   <div className="relative flex items-center justify-center">
                     <span>Explore Tools</span>
@@ -196,19 +196,19 @@ const HomePage = () => {
                   </div>
                 </button>
 
-                <button className="px-8 py-4 bg-[#111827] backdrop-blur-sm text-[#F9FAFB] font-semibold rounded-2xl text-lg border-2 border-[#374151] hover:border-[#3B82F6] hover:bg-[#1F2937] transition-all duration-300 hover:scale-105">
+                <button className="px-8 py-4 bg-background backdrop-blur-sm text-text-heading font-semibold rounded-2xl text-lg border-2 border-border hover:border-primary-accent hover:bg-card-background transition-all duration-300 hover:scale-105">
                   Learn More
                 </button>
               </div>
 
               {/* Social Proof */}
-              <div className="mt-12 flex flex-col sm:flex-row items-center justify-center gap-8 text-[#D1D5DB]">
+              <div className="mt-12 flex flex-col sm:flex-row items-center justify-center gap-8 text-text-body">
                 <div className="flex items-center gap-2">
                   <div className="flex -space-x-2">
                     {[...Array(4)].map((_, i) => (
                       <div 
                         key={i}
-                        className="w-10 h-10 rounded-full border-2 border-[#1F2937] bg-gradient-to-br from-[#3B82F6] to-[#2DD4BF]"
+                        className="w-10 h-10 rounded-full border-2 border-card-background bg-gradient-to-br from-primary-accent to-secondary-accent"
                       ></div>
                     ))}
                   </div>
@@ -217,7 +217,7 @@ const HomePage = () => {
                 <div className="flex items-center gap-2">
                   <div className="flex gap-1">
                     {[...Array(5)].map((_, i) => (
-                      <Star key={i} className="w-5 h-5 fill-[#3B82F6] text-[#3B82F6]" />
+                      <Star key={i} className="w-5 h-5 fill-primary-accent text-primary-accent" />
                     ))}
                   </div>
                   <span className="text-sm font-medium">4.9/5 Rating</span>
@@ -232,7 +232,7 @@ const HomePage = () => {
       {showScrollTop && (
         <button
           onClick={scrollToTop}
-          className="fixed bottom-8 right-8 z-50 w-14 h-14 bg-[#3B82F6] text-white rounded-full shadow-xl hover:shadow-2xl hover:bg-[#2563EB] transition-all duration-300 hover:scale-110 group"
+          className="fixed bottom-8 right-8 z-50 w-14 h-14 bg-primary-accent text-white rounded-full shadow-xl hover:shadow-2xl hover:opacity-90 transition-all duration-300 hover:scale-110 group"
           style={{
             animation: 'bounce 2s infinite',
           }}
