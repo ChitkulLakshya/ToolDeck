@@ -41,8 +41,8 @@ const Header = () => {
   return (
     <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
       isScrolled 
-        ? 'bg-white/95 dark:bg-gray-900/95 backdrop-blur-md shadow-lg border-b border-gray-200/50 dark:border-gray-700/50' 
-        : 'bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm shadow-sm border-b border-gray-100/50 dark:border-gray-800/50'
+        ? 'bg-background/95 backdrop-blur-md shadow-lg border-b border-border' 
+        : 'bg-background/80 backdrop-blur-sm shadow-sm border-b border-border/50'
     }`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="h-16 flex items-center justify-between">
@@ -53,16 +53,16 @@ const Header = () => {
             onClick={() => setIsMobileMenuOpen(false)}
           >
             <div className="relative">
-              <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-purple-500 rounded-xl blur opacity-75 group-hover:opacity-100 transition-opacity"></div>
-              <div className="relative bg-white dark:bg-gray-800 p-2 rounded-xl shadow-lg">
-                <Bot className="w-6 h-6 text-blue-600 dark:text-blue-400" />
+              <div className="absolute inset-0 bg-gradient-to-r from-primary-accent to-secondary-accent rounded-xl blur opacity-75 group-hover:opacity-100 transition-opacity"></div>
+              <div className="relative bg-background p-2 rounded-xl shadow-lg">
+                <Bot className="w-6 h-6 text-primary-accent" />
               </div>
             </div>
             <div className="flex items-center space-x-2">
-              <span className="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+              <span className="text-xl font-bold bg-gradient-to-r from-primary-accent to-secondary-accent bg-clip-text text-transparent">
                 ToolDeck
               </span>
-              <Sparkles className="w-4 h-4 text-yellow-500 animate-pulse" />
+              <Sparkles className="w-4 h-4 text-warning animate-pulse" />
             </div>
           </Link>
 
@@ -73,18 +73,18 @@ const Header = () => {
                 {item.to ? (
                   <Link
                     to={item.to}
-                    className="relative px-4 py-2 text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 font-medium transition-all duration-200 group"
+                    className="relative px-4 py-2 text-text-body hover:text-primary-accent font-medium transition-all duration-200 group"
                   >
                     <span className="relative z-10">{item.label}</span>
-                    <div className="absolute inset-0 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/30 dark:to-purple-900/30 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200"></div>
+                    <div className="absolute inset-0 bg-primary-accent/10 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200"></div>
                   </Link>
                 ) : (
                   <button
                     onClick={item.action}
-                    className="relative px-4 py-2 text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 font-medium transition-all duration-200 group"
+                    className="relative px-4 py-2 text-text-body hover:text-primary-accent font-medium transition-all duration-200 group"
                   >
                     <span className="relative z-10">{item.label}</span>
-                    <div className="absolute inset-0 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/30 dark:to-purple-900/30 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200"></div>
+                    <div className="absolute inset-0 bg-primary-accent/10 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200"></div>
                   </button>
                 )}
               </div>
@@ -99,12 +99,12 @@ const Header = () => {
             <ThemeToggle />
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+              className="p-2 rounded-lg hover:bg-card-background transition-colors"
             >
               {isMobileMenuOpen ? (
-                <X className="w-6 h-6 text-gray-700 dark:text-gray-300" />
+                <X className="w-6 h-6 text-text-body" />
               ) : (
-                <Menu className="w-6 h-6 text-gray-700 dark:text-gray-300" />
+                <Menu className="w-6 h-6 text-text-body" />
               )}
             </button>
           </div>
@@ -114,14 +114,14 @@ const Header = () => {
         <div className={`lg:hidden transition-all duration-300 overflow-hidden ${
           isMobileMenuOpen ? 'max-h-64 opacity-100' : 'max-h-0 opacity-0'
         }`}>
-          <nav className="py-4 space-y-2 border-t border-gray-200/50 dark:border-gray-700/50">
+          <nav className="py-4 space-y-2 border-t border-border">
             {navItems.map((item, index) => (
               <div key={index}>
                 {item.to ? (
                   <Link
                     to={item.to}
                     onClick={() => setIsMobileMenuOpen(false)}
-                    className="block px-4 py-3 text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-gray-800 rounded-lg font-medium transition-all duration-200"
+                    className="block px-4 py-3 text-text-body hover:text-primary-accent hover:bg-card-background rounded-lg font-medium transition-all duration-200"
                   >
                     {item.label}
                   </Link>
@@ -131,7 +131,7 @@ const Header = () => {
                       item.action();
                       setIsMobileMenuOpen(false);
                     }}
-                    className="block w-full text-left px-4 py-3 text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-gray-800 rounded-lg font-medium transition-all duration-200"
+                    className="block w-full text-left px-4 py-3 text-text-body hover:text-primary-accent hover:bg-card-background rounded-lg font-medium transition-all duration-200"
                   >
                     {item.label}
                   </button>

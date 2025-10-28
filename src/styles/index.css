@@ -2,6 +2,60 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ========================================
+   GLOBAL CSS VARIABLES - DESIGN SYSTEM
+   ======================================== */
+
+/* 1. Light Mode Colors (Default) */
+:root {
+  /* Backgrounds */
+  --color-background: #ffffff; /* White */
+  --color-card-background: #f9fafb; /* Off-white */
+  
+  /* Accents */
+  --color-primary-accent: #3B82F6; /* Electric Blue */
+  --color-secondary-accent: #2DD4BF; /* Teal */
+  
+  /* Text */
+  --color-text-heading: #111827; /* Charcoal */
+  --color-text-body: #374151; /* Medium Gray */
+  --color-text-muted: #6B7280; /* Light Gray */
+  
+  /* Borders & Dividers */
+  --color-border: #e5e7eb; /* Light Gray */
+  
+  /* Status Colors */
+  --color-success: #10b981; /* Green */
+  --color-warning: #f59e0b; /* Orange */
+  --color-error: #ef4444; /* Red */
+  --color-info: #3B82F6; /* Blue */
+}
+
+/* 2. Dark Mode Colors */
+.dark {
+  /* Backgrounds */
+  --color-background: #111827; /* Charcoal */
+  --color-card-background: #1F2937; /* Lighter Charcoal */
+  
+  /* Accents */
+  --color-primary-accent: #3B82F6; /* Electric Blue (same in both modes) */
+  --color-secondary-accent: #2DD4BF; /* Teal (same in both modes) */
+  
+  /* Text */
+  --color-text-heading: #F9FAFB; /* Near-white */
+  --color-text-body: #D1D5DB; /* Lighter Gray */
+  --color-text-muted: #9CA3AF; /* Medium Gray */
+  
+  /* Borders & Dividers */
+  --color-border: #374151; /* Dark Gray */
+  
+  /* Status Colors */
+  --color-success: #10b981; /* Green (same in both modes) */
+  --color-warning: #f59e0b; /* Orange (same in both modes) */
+  --color-error: #ef4444; /* Red (same in both modes) */
+  --color-info: #3B82F6; /* Blue (same in both modes) */
+}
+
 /* Dark mode transitions */
 @layer base {
   * {
@@ -13,7 +67,8 @@
   }
 
   body {
-    @apply bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100;
+    background-color: var(--color-background);
+    color: var(--color-text-body);
   }
 }
 
@@ -39,15 +94,16 @@
 }
 
 ::-webkit-scrollbar-track {
-  @apply bg-gray-100 dark:bg-gray-800;
+  background-color: var(--color-background);
 }
 
 ::-webkit-scrollbar-thumb {
-  @apply bg-gradient-to-b from-blue-600 to-purple-600 rounded;
+  background: linear-gradient(to bottom, var(--color-primary-accent), var(--color-secondary-accent));
+  border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  @apply from-blue-700 to-purple-700;
+  opacity: 0.8;
 }
 
 /* Dark mode specific utilities */
@@ -57,15 +113,16 @@
   }
   
   .card-dark {
-    @apply bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700;
+    background-color: var(--color-card-background);
+    border: 1px solid var(--color-border);
   }
   
   .text-dark {
-    @apply text-gray-900 dark:text-gray-100;
+    color: var(--color-text-body);
   }
   
   .text-muted-dark {
-    @apply text-gray-600 dark:text-gray-400;
+    color: var(--color-text-muted);
   }
 }
 

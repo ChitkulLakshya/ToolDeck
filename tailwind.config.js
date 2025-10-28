@@ -7,12 +7,21 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        // Custom dark mode colors
-        dark: {
-          bg: '#0f172a',
-          surface: '#1e293b',
-          border: '#334155',
-        }
+        // Semantic color tokens mapped to CSS variables
+        'background': 'var(--color-background)',
+        'card-background': 'var(--color-card-background)',
+        'primary-accent': 'var(--color-primary-accent)',
+        'secondary-accent': 'var(--color-secondary-accent)',
+        'text-heading': 'var(--color-text-heading)',
+        'text-body': 'var(--color-text-body)',
+        'text-muted': 'var(--color-text-muted)',
+        'border': 'var(--color-border)',
+        
+        // Status colors
+        'success': 'var(--color-success)',
+        'warning': 'var(--color-warning)',
+        'error': 'var(--color-error)',
+        'info': 'var(--color-info)',
       },
       animation: {
         'fade-in': 'fadeIn 0.5s ease-in-out',
