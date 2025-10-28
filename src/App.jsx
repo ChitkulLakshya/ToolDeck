@@ -1,37 +1,45 @@
-import React from "react";
+import React, { Suspense, lazy } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import ErrorBoundary from "./components/ErrorBoundary";
+import LoadingSpinner from "./components/LoadingSpinner";
+import MainLayout from "./layouts/MainLayout";
+import FullScreenLayout from "./layouts/FullScreenLayout";
 
-import Header from "./components/Header";
-import HeroSection from "./components/HeroSection";
-import StatsSection from "./components/StatsSection";
-import ToolsSection from "./components/ToolsSection";
-import Footer from "./components/Footer";
-import HomePage from "./pages/HomePage";
-import QRCodePage from "./pages/QRCodePage";
-import WhatsAppPage from "./pages/WhatsAppPage";
-import EmailPage from "./pages/EmailPage";
-import PDFEditorPage from "./pages/PDFEditorPage";
-import FileConverterPage from "./pages/FileConverterPage";
+// Lazy load pages for better performance
+const HomePage = lazy(() => import("./pages/HomePage"));
+const QRCodePage = lazy(() => import("./pages/QRCodePage"));
+const WhatsAppPage = lazy(() => import("./pages/WhatsAppPage"));
+const EmailPage = lazy(() => import("./pages/EmailPage"));
+const PDFEditorPage = lazy(() => import("./pages/PDFEditorPage"));
+const FileConverterPage = lazy(() => import("./pages/FileConverterPage"));
+const NotFoundPage = lazy(() => import("./pages/NotFoundPage"));
 
 const App = () => {
   return (
-    <Router>
-      <div className="font-sans antialiased text-gray-900 min-h-screen bg-gray-50">
-        <Header />
-        <main>
+    <ErrorBoundary>
+      <Router>
+        <Suspense fallback={<LoadingSpinner />}>
           <Routes>
-             <Route path="/" element={<HomePage />} />
-             <Route path="/tools" element={<ToolsSection />} />
-             <Route path="/qr-code" element={<QRCodePage />} />
-             <Route path="/email" element={<EmailPage />} />
-             <Route path="/whatsapp" element={<WhatsAppPage />} />
-             <Route path="/pdf-editor" element={<PDFEditorPage />} />
-             <Route path="/file-converter" element={<FileConverterPage />} />
-           </Routes>
-        </main>
-        <Footer />
-      </div>
-    </Router>
+            {/* Routes with Header + Footer */}
+            <Route element={<MainLayout />}>
+              <Route path="/" element={<HomePage />} />
+              <Route path="/qr-code" element={<QRCodePage />} />
+              <Route path="/whatsapp" element={<WhatsAppPage />} />
+              <Route path="/email" element={<EmailPage />} />
+              <Route path="/file-converter" element={<FileConverterPage />} />
+            </Route>
+
+            {/* Full-screen routes (no Header/Footer) */}
+            <Route element={<FullScreenLayout />}>
+              <Route path="/pdf-editor" element={<PDFEditorPage />} />
+            </Route>
+
+            {/* 404 Not Found */}
+            <Route path="*" element={<NotFoundPage />} />
+          </Routes>
+        </Suspense>
+      </Router>
+    </ErrorBoundary>
   );
 };
 
