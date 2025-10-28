@@ -1,5 +1,7 @@
 import React, { useState, useRef } from "react";
 import { generateEmail, sendEmail } from "../api/api";
+import { useToast } from "../contexts/ToastContext";
+import { InlineLoader } from "../components/LoadingSpinner";
 import { 
   Mail, 
   Upload, 
@@ -9,7 +11,6 @@ import {
   Eye, 
   Image as ImageIcon,
   FileText,
-  Loader2,
   CheckCircle,
   AlertCircle,
   Copy,
@@ -20,6 +21,7 @@ import {
 } from "lucide-react";
 
 const EmailPage = () => {
+  const toast = useToast();
   const [eventImage, setEventImage] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
   const [context, setContext] = useState("");
@@ -27,7 +29,6 @@ const EmailPage = () => {
   const [isGenerating, setIsGenerating] = useState(false);
   const [isSending, setIsSending] = useState(false);
   const [showPreview, setShowPreview] = useState(false);
-  const [statusMessage, setStatusMessage] = useState("");
   const [csvFile, setCsvFile] = useState(null);
   const [senderEmail, setSenderEmail] = useState("");
   const [senderName, setSenderName] = useState("");
@@ -43,7 +44,7 @@ const EmailPage = () => {
     const file = e.target.files[0];
     if (file) {
       if (file.size > 5 * 1024 * 1024) {
-        alert("Image size should be less than 5MB");
+        toast.error("Image size should be less than 5MB");
         return;
       }
       setEventImage(file);
@@ -52,6 +53,7 @@ const EmailPage = () => {
         setImagePreview(reader.result);
       };
       reader.readAsDataURL(file);
+      toast.success("Image uploaded successfully");
     }
   };
 
@@ -60,10 +62,11 @@ const EmailPage = () => {
     const file = e.target.files[0];
     if (file) {
       if (!file.name.endsWith('.csv')) {
-        alert("Please upload a valid CSV file");
+        toast.error("Please upload a valid CSV file");
         return;
       }
       setCsvFile(file);
+      toast.success("CSV file uploaded");
     }
   };
 
@@ -73,22 +76,23 @@ const EmailPage = () => {
     const totalSize = files.reduce((acc, file) => acc + file.size, 0);
     
     if (totalSize > 10 * 1024 * 1024) {
-      alert("Total attachment size should be less than 10MB");
+      toast.error("Total attachment size should be less than 10MB");
       return;
     }
     
     setAttachments(files);
+    toast.success(`${files.length} file(s) attached`);
   };
 
   // Generate AI email using API utility
   const generateAIEmail = async () => {
     if (!eventImage && !context) {
-      alert("Please upload an event image or provide context");
+      toast.warning("Please upload an event image or provide context");
       return;
     }
 
     setIsGenerating(true);
-    setStatusMessage("🤖 AI is analyzing your event...");
+    toast.info("🤖 AI is analyzing your event...");
 
     try {
       const result = await generateEmail({
@@ -102,11 +106,11 @@ const EmailPage = () => {
       });
       
       setShowPreview(true);
-      setStatusMessage("✅ Email generated successfully!");
+      toast.success("✅ Email generated successfully!");
       
     } catch (error) {
       console.error("Error generating email:", error);
-      setStatusMessage(`❌ Error: ${error.message}`);
+      toast.error(error.message || "Failed to generate email");
     } finally {
       setIsGenerating(false);
     }
@@ -115,27 +119,27 @@ const EmailPage = () => {
   // Send email using API utility
   const sendEmailHandler = async () => {
     if (!generatedEmail.subject || !generatedEmail.body) {
-      alert("Please generate an email first");
+      toast.warning("Please generate an email first");
       return;
     }
 
     if (!senderEmail || !senderName) {
-      alert("Please provide sender details");
+      toast.warning("Please provide sender details");
       return;
     }
 
     if (sendMode === "single" && !recipientEmail) {
-      alert("Please provide recipient email");
+      toast.warning("Please provide recipient email");
       return;
     }
 
     if (sendMode === "bulk" && !csvFile) {
-      alert("Please upload a CSV file for bulk sending");
+      toast.warning("Please upload a CSV file for bulk sending");
       return;
     }
 
     setIsSending(true);
-    setStatusMessage("📧 Sending email...");
+    toast.info("📧 Sending email...");
 
     try {
       const result = await sendEmail({
@@ -149,7 +153,7 @@ const EmailPage = () => {
         attachments
       });
 
-      setStatusMessage(`✅ ${result.message}`);
+      toast.success(`✅ ${result.message}`);
       
       // Reset form after successful send
       setTimeout(() => {
@@ -158,7 +162,7 @@ const EmailPage = () => {
 
     } catch (error) {
       console.error("Error sending email:", error);
-      setStatusMessage(`❌ Error: ${error.message}`);
+      toast.error(error.message || "Failed to send email");
     } finally {
       setIsSending(false);
     }
@@ -167,7 +171,7 @@ const EmailPage = () => {
   // Copy to clipboard
   const copyToClipboard = (text) => {
     navigator.clipboard.writeText(text);
-    alert("Copied to clipboard!");
+    toast.success("Copied to clipboard!");
   };
 
   // Reset form
@@ -177,7 +181,6 @@ const EmailPage = () => {
     setContext("");
     setGeneratedEmail({ subject: "", body: "" });
     setShowPreview(false);
-    setStatusMessage("");
     setCsvFile(null);
     setAttachments([]);
     if (fileInputRef.current) fileInputRef.current.value = "";
@@ -315,7 +318,7 @@ const EmailPage = () => {
               >
                 {isGenerating ? (
                   <>
-                    <Loader2 className="w-5 h-5 animate-spin" />
+                    <InlineLoader size="default" />
                     Generating with AI...
                   </>
                 ) : (
@@ -325,26 +328,6 @@ const EmailPage = () => {
                   </>
                 )}
               </button>
-
-              {/* Status Message */}
-              {statusMessage && (
-                <div className={`p-4 rounded-xl flex items-center gap-3 ${
-                  statusMessage.includes('✅') 
-                    ? 'bg-green-50 text-green-700 border border-green-200' 
-                    : statusMessage.includes('❌')
-                    ? 'bg-red-50 text-red-700 border border-red-200'
-                    : 'bg-blue-50 text-blue-700 border border-blue-200'
-                }`}>
-                  {statusMessage.includes('✅') ? (
-                    <CheckCircle className="w-5 h-5" />
-                  ) : statusMessage.includes('❌') ? (
-                    <AlertCircle className="w-5 h-5" />
-                  ) : (
-                    <Loader2 className="w-5 h-5 animate-spin" />
-                  )}
-                  <span className="text-sm font-medium">{statusMessage}</span>
-                </div>
-              )}
             </div>
           </div>
 
@@ -498,7 +481,7 @@ const EmailPage = () => {
                   >
                     {isSending ? (
                       <>
-                        <Loader2 className="w-5 h-5 animate-spin" />
+                        <InlineLoader size="default" />
                         Sending...
                       </>
                     ) : (

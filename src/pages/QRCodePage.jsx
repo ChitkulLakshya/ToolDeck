@@ -1,4 +1,5 @@
 import React, { useState, useRef } from "react";
+import { useToast } from "../contexts/ToastContext";
 import { QRCodeCanvas } from "qrcode.react";
 import { 
   Download, 
@@ -38,6 +39,8 @@ const QRCodePage = () => {
     location: { lat: "", lng: "", label: "" }
   });
   const qrRef = useRef(null);
+
+  const toast = useToast();
 
   // Predefined color schemes
   const colorPresets = [
@@ -81,7 +84,7 @@ const QRCodePage = () => {
     
     // Validate content
     if (!qrContent || qrContent.length === 0) {
-      alert("Please enter some content for the QR code");
+      toast.warning("Please enter some content for the QR code");
       setIsGenerating(false);
       return;
     }
@@ -200,7 +203,7 @@ const QRCodePage = () => {
       });
     } catch (err) {
       console.error('Failed to copy QR code:', err);
-      alert('Failed to copy QR code. Please try downloading instead.');
+      toast.error('Failed to copy QR code. Please try downloading instead.');
     }
   };
 
