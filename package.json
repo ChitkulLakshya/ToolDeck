@@ -4,8 +4,16 @@
   "private": true,
   "dependencies": {
     "@sendgrid/mail": "^8.1.6",
+    "axios": "^1.13.0",
+    "browser-image-compression": "^2.0.2",
+    "docx-pdf": "^0.0.1",
+    "file-saver": "^2.0.5",
+    "html2canvas": "^1.4.1",
+    "jspdf": "^3.0.3",
     "lucide-react": "^0.259.0",
+    "mammoth": "^1.11.0",
     "nodemailer": "^6.9.4",
+    "ogl": "^1.0.11",
     "pdf-lib": "^1.17.1",
     "pdfjs-dist": "^5.4.296",
     "qrcode.react": "^4.2.0",
@@ -15,7 +23,9 @@
     "react-router-dom": "^6.30.1",
     "react-scripts": "^5.0.1",
     "react-scroll": "^1.9.3",
-    "whatsapp-web.js": "^1.22.0"
+    "tldraw": "^4.1.1",
+    "whatsapp-web.js": "^1.22.0",
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.21",

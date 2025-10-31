@@ -3,7 +3,22 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>ToolDeck</title>
+    <meta name="theme-color" content="#ffffff" />
+    <meta name="color-scheme" content="light dark" />
+    <title>ToolDeck - All-in-One Productivity Suite</title>
+    
+    <!-- Prevent flash of unstyled content -->
+    <script>
+      // Check theme before page loads
+      (function() {
+        const theme = localStorage.getItem('tooldeck-theme');
+        if (theme) {
+          document.documentElement.classList.add(theme);
+        } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+          document.documentElement.classList.add('dark');
+        }
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>
