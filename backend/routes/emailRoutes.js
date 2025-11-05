@@ -173,7 +173,9 @@ router.post("/send", upload.fields([
   try {
     const { 
       senderEmail, 
-      senderName, 
+      senderName,
+      senderPassword, // User's email password (if using own account)
+      useOwnAccount, // Flag to indicate if user wants to use their own account
       subject, 
       body, 
       sendMode,
@@ -185,34 +187,50 @@ router.post("/send", upload.fields([
       return res.status(400).json({ error: "Missing required fields" });
     }
 
-    // Check if email credentials are configured
-    if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
-      console.warn("Email credentials not configured");
-      
-      // Clean up uploaded files
-      if (req.files) {
-        Object.values(req.files).flat().forEach(file => {
-          if (fs.existsSync(file.path)) {
-            fs.unlinkSync(file.path);
-          }
+    // Determine which credentials to use
+    let emailUser, emailPass;
+    
+    if (useOwnAccount === 'true' || useOwnAccount === true) {
+      // User wants to send from their own account
+      if (!senderPassword) {
+        return res.status(400).json({ error: "Email password required when using your own account" });
+      }
+      emailUser = senderEmail;
+      emailPass = senderPassword;
+      console.log(`Using user's own email account: ${senderEmail}`);
+    } else {
+      // Use server's configured email
+      if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
+        console.warn("Email credentials not configured");
+        
+        // Clean up uploaded files
+        if (req.files) {
+          Object.values(req.files).flat().forEach(file => {
+            if (fs.existsSync(file.path)) {
+              fs.unlinkSync(file.path);
+            }
+          });
+        }
+        
+        // Return mock success
+        return res.json({
+          success: true,
+          message: `Mock: Email would be sent to ${sendMode === 'single' ? recipientEmail : 'multiple recipients'}`,
+          successCount: sendMode === 'single' ? 1 : 10,
+          failCount: 0
         });
       }
-      
-      // Return mock success
-      return res.json({
-        success: true,
-        message: `Mock: Email would be sent to ${sendMode === 'single' ? recipientEmail : 'multiple recipients'}`,
-        successCount: sendMode === 'single' ? 1 : 10,
-        failCount: 0
-      });
+      emailUser = process.env.EMAIL_USER;
+      emailPass = process.env.EMAIL_PASS;
+      console.log(`Using server's email account: ${emailUser}`);
     }
 
-    // Create nodemailer transporter
+    // Create nodemailer transporter with dynamic credentials
     const transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS
+        user: emailUser,
+        pass: emailPass
       }
     });
 
