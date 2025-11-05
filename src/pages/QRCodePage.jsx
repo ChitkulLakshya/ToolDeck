@@ -235,7 +235,7 @@ const QRCodePage = () => {
         return (
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
+              <label className="block text-sm font-medium text-text-body mb-2">Email Address</label>
               <input
                 type="email"
                 value={templateData.email.to}
@@ -243,13 +243,13 @@ const QRCodePage = () => {
                   ...templateData,
                   email: { ...templateData.email, to: e.target.value }
                 })}
-                className="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-300 focus:border-purple-300"
+                className="w-full px-4 py-3 border-2 border-border bg-input-background text-text-heading rounded-xl focus:ring-2 focus:ring-purple-300 focus:border-purple-300"
                 placeholder="recipient@example.com"
                 required
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Subject</label>
+              <label className="block text-sm font-medium text-text-body mb-2">Subject</label>
               <input
                 type="text"
                 value={templateData.email.subject}
@@ -257,12 +257,12 @@ const QRCodePage = () => {
                   ...templateData,
                   email: { ...templateData.email, subject: e.target.value }
                 })}
-                className="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-300 focus:border-purple-300"
+                className="w-full px-4 py-3 border-2 border-border bg-input-background text-text-heading rounded-xl focus:ring-2 focus:ring-purple-300 focus:border-purple-300"
                 placeholder="Email subject"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Message Body</label>
+              <label className="block text-sm font-medium text-text-body mb-2">Message Body</label>
               <textarea
                 rows="3"
                 value={templateData.email.body}
@@ -270,7 +270,7 @@ const QRCodePage = () => {
                   ...templateData,
                   email: { ...templateData.email, body: e.target.value }
                 })}
-                className="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-300 focus:border-purple-300 resize-none"
+                className="w-full px-4 py-3 border-2 border-border bg-input-background text-text-heading rounded-xl focus:ring-2 focus:ring-purple-300 focus:border-purple-300 resize-none"
                 placeholder="Email message"
               />
             </div>
@@ -280,7 +280,7 @@ const QRCodePage = () => {
       case "phone":
         return (
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Phone Number (with country code)</label>
+            <label className="block text-sm font-medium text-text-body mb-2">Phone Number (with country code)</label>
             <input
               type="tel"
               value={templateData.phone.number}
@@ -288,7 +288,7 @@ const QRCodePage = () => {
                 ...templateData,
                 phone: { number: e.target.value }
               })}
-              className="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-300 focus:border-purple-300"
+              className="w-full px-4 py-3 border-2 border-border bg-input-background text-text-heading rounded-xl focus:ring-2 focus:ring-purple-300 focus:border-purple-300"
               placeholder="+1234567890"
               required
             />
@@ -398,13 +398,13 @@ const QRCodePage = () => {
       default: // text or url
         return (
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-3">
+            <label className="block text-sm font-semibold text-text-body mb-3">
               Enter {qrType === "url" ? "URL" : "Text"}
             </label>
             <textarea
               name="qrInput"
               rows="4"
-              className="w-full px-4 py-4 border-2 border-dashed border-gray-300 rounded-2xl focus:ring-2 focus:ring-purple-300 focus:border-purple-300 text-center text-lg resize-none transition-all"
+              className="w-full px-4 py-4 border-2 border-dashed border-border bg-input-background text-text-heading rounded-2xl focus:ring-2 focus:ring-purple-300 focus:border-purple-300 text-center text-lg resize-none transition-all"
               placeholder={qrType === "url" ? "https://example.com" : "Enter any text here..."}
               required
             />
@@ -414,7 +414,7 @@ const QRCodePage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-rose-50 pt-24 pb-8 px-4 animate-fadeIn">
+    <div className="min-h-screen bg-background pt-24 pb-8 px-4 animate-fadeIn">
       <div className="max-w-4xl mx-auto">
         {/* Header */}
         <div className="text-center mb-8">
@@ -424,20 +424,20 @@ const QRCodePage = () => {
           <h1 className="text-5xl font-extrabold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent mb-4">
             QR Code Generator
           </h1>
-          <p className="text-gray-600 text-lg max-w-2xl mx-auto">
+          <p className="text-text-body text-lg max-w-2xl mx-auto">
             Create beautiful, customizable QR codes instantly. Perfect for sharing links, contact info, WiFi credentials, and more.
           </p>
         </div>
 
         <div className="grid lg:grid-cols-2 gap-8">
           {/* Input Section */}
-          <div className="bg-white rounded-3xl p-8 shadow-xl border border-gray-100">
+          <div className="bg-card-background rounded-3xl p-8 shadow-xl border border-border">
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-2xl font-bold text-gray-900">Create QR Code</h2>
+              <h2 className="text-2xl font-bold text-text-heading">Create QR Code</h2>
               <button
                 type="button"
                 onClick={() => setShowSettings(!showSettings)}
-                className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-xl transition-colors"
+                className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-text-body hover:text-text-heading hover:bg-card-hover rounded-xl transition-colors"
               >
                 <Settings className="w-4 h-4" />
                 Customize
@@ -446,7 +446,7 @@ const QRCodePage = () => {
 
             {/* QR Type Selector */}
             <div className="mb-6">
-              <label className="block text-sm font-semibold text-gray-700 mb-3">QR Code Type</label>
+              <label className="block text-sm font-semibold text-text-body mb-3">QR Code Type</label>
               <div className="grid grid-cols-3 gap-2">
                 {[
                   { value: "text", icon: Sparkles, label: "Text" },
@@ -467,8 +467,8 @@ const QRCodePage = () => {
                       }}
                       className={`flex flex-col items-center gap-2 p-3 rounded-xl border-2 transition-all ${
                         qrType === type.value
-                          ? 'border-purple-500 bg-purple-50 text-purple-700'
-                          : 'border-gray-200 hover:border-gray-300 text-gray-600'
+                          ? 'border-purple-500 bg-purple-50 dark:bg-purple-900/20 text-purple-700 dark:text-purple-300'
+                          : 'border-border hover:border-border-hover text-text-body'
                       }`}
                     >
                       <IconComponent className="w-5 h-5" />
@@ -485,10 +485,10 @@ const QRCodePage = () => {
 
               {/* Settings Panel */}
               {showSettings && (
-                <div className="bg-gradient-to-br from-gray-50 to-purple-50 rounded-2xl p-6 space-y-6 border border-purple-100">
+                <div className="bg-gradient-to-br from-gray-50 to-purple-50 dark:from-gray-800 dark:to-purple-900/20 rounded-2xl p-6 space-y-6 border border-purple-100 dark:border-purple-800">
                   <div className="flex items-center gap-2 mb-4">
                     <Palette className="w-5 h-5 text-purple-600" />
-                    <h3 className="font-semibold text-gray-900">Customization Options</h3>
+                    <h3 className="font-semibold text-text-heading">Customization Options</h3>
                   </div>
                   
                   {/* Color Presets */}
@@ -598,7 +598,7 @@ const QRCodePage = () => {
                       onChange={(e) => setQrSettings({...qrSettings, includeMargin: e.target.checked})}
                       className="w-4 h-4 text-purple-600 border-gray-300 rounded focus:ring-purple-500"
                     />
-                    <label htmlFor="includeMargin" className="text-sm font-medium text-gray-700">
+                    <label htmlFor="includeMargin" className="text-sm font-medium text-text-body">
                       Include margin around QR code
                     </label>
                   </div>
@@ -628,7 +628,7 @@ const QRCodePage = () => {
                   <button
                     type="button"
                     onClick={resetForm}
-                    className="px-6 py-4 bg-gray-100 text-gray-700 font-semibold rounded-2xl hover:bg-gray-200 transition-colors"
+                    className="px-6 py-4 bg-secondary-button text-text-body font-semibold rounded-2xl hover:bg-opacity-80 transition-colors"
                   >
                     <RefreshCw className="w-5 h-5" />
                   </button>
@@ -638,8 +638,8 @@ const QRCodePage = () => {
           </div>
 
           {/* QR Code Display Section */}
-          <div className="bg-white rounded-3xl p-8 shadow-xl border border-gray-100">
-            <h2 className="text-2xl font-bold text-gray-900 mb-6">Your QR Code</h2>
+          <div className="bg-card-background rounded-3xl p-8 shadow-xl border border-border">
+            <h2 className="text-2xl font-bold text-text-heading mb-6">Your QR Code</h2>
             
             {qrPreview ? (
               <div className="space-y-6">
@@ -721,26 +721,26 @@ const QRCodePage = () => {
                 </div>
 
                 {/* QR Code Info */}
-                <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-xl p-4 border border-purple-100">
-                  <h3 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
+                <div className="bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 rounded-xl p-4 border border-purple-100 dark:border-purple-800">
+                  <h3 className="font-semibold text-text-heading mb-3 flex items-center gap-2">
                     <Eye className="w-4 h-4 text-purple-600" />
                     QR Code Details
                   </h3>
-                  <div className="text-sm text-gray-600 space-y-2">
+                  <div className="text-sm text-text-body space-y-2">
                     <div className="flex items-start gap-2">
-                      <span className="font-medium text-gray-700 min-w-[80px]">Type:</span>
+                      <span className="font-medium text-text-heading min-w-[80px]">Type:</span>
                       <span className="capitalize">{qrType}</span>
                     </div>
                     <div className="flex items-start gap-2">
-                      <span className="font-medium text-gray-700 min-w-[80px]">Content:</span>
+                      <span className="font-medium text-text-heading min-w-[80px]">Content:</span>
                       <span className="break-all">{qrPreview.length > 50 ? `${qrPreview.substring(0, 50)}...` : qrPreview}</span>
                     </div>
                     <div className="flex items-start gap-2">
-                      <span className="font-medium text-gray-700 min-w-[80px]">Size:</span>
+                      <span className="font-medium text-text-heading min-w-[80px]">Size:</span>
                       <span>{qrSettings.size}px × {qrSettings.size}px</span>
                     </div>
                     <div className="flex items-start gap-2">
-                      <span className="font-medium text-gray-700 min-w-[80px]">Error Level:</span>
+                      <span className="font-medium text-text-heading min-w-[80px]">Error Level:</span>
                       <span>{qrSettings.level} - {
                         qrSettings.level === 'L' ? 'Low (7%)' :
                         qrSettings.level === 'M' ? 'Medium (15%)' :
@@ -752,11 +752,11 @@ const QRCodePage = () => {
               </div>
             ) : (
               <div className="flex flex-col items-center justify-center py-16 text-center">
-                <div className="w-24 h-24 bg-gradient-to-br from-purple-100 to-pink-100 rounded-2xl flex items-center justify-center mb-4">
+                <div className="w-24 h-24 bg-gradient-to-br from-purple-100 to-pink-100 dark:from-purple-900/20 dark:to-pink-900/20 rounded-2xl flex items-center justify-center mb-4">
                   <Eye className="w-12 h-12 text-purple-400" />
                 </div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-2">No QR Code Generated</h3>
-                <p className="text-gray-500 max-w-sm">Select a type and enter your content to generate a custom QR code</p>
+                <h3 className="text-xl font-semibold text-text-heading mb-2">No QR Code Generated</h3>
+                <p className="text-text-muted max-w-sm">Select a type and enter your content to generate a custom QR code</p>
               </div>
             )}
           </div>
