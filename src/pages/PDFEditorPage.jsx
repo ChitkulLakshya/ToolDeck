@@ -306,12 +306,33 @@ const PDFEditorPage = () => {
   const [editor, setEditor] = useState(null);
 
   return (
-    <div className="w-screen h-screen flex flex-col pt-16">
+    <div style={{ 
+      position: 'fixed',
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      display: 'flex',
+      flexDirection: 'column',
+      overflow: 'hidden'
+    }}>
       <PDFEditorControls editor={editor} onFileLoaded={setPdfLoaded} toast={toast} />
       
-      <div className="flex-grow relative">
+      <div style={{ 
+        flex: 1,
+        position: 'relative',
+        minHeight: 0 // Important for flex sizing
+      }}>
         {!pdfLoaded && (
-          <div className="absolute inset-0 flex items-center justify-center bg-background z-10">
+          <div style={{
+            position: 'absolute',
+            inset: 0,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            backgroundColor: 'var(--color-background)',
+            zIndex: 10
+          }}>
             <div className="text-center p-12 max-w-md">
               <div className="w-24 h-24 mx-auto mb-6 bg-primary-accent/10 rounded-full flex items-center justify-center">
                 <FileText size={48} className="text-primary-accent" />
@@ -332,8 +353,14 @@ const PDFEditorPage = () => {
           </div>
         )}
         
-        <Tldraw onMount={(editor) => setEditor(editor)}>
-        </Tldraw>
+        <div style={{ 
+          position: 'absolute',
+          inset: 0,
+          width: '100%',
+          height: '100%'
+        }}>
+          <Tldraw onMount={(editor) => setEditor(editor)} />
+        </div>
       </div>
     </div>
   );
