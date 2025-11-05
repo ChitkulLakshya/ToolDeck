@@ -21,7 +21,12 @@ const app = express();
 
 // CORS Configuration
 app.use(cors({
-  origin: process.env.FRONTEND_URL || "http://localhost:3000",
+  origin: [
+    process.env.FRONTEND_URL || "http://localhost:3000",
+    "https://tool-deck.vercel.app",  // Production frontend
+    "http://localhost:3000",          // Local development
+    "http://localhost:5173"           // Vite dev server
+  ],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
