@@ -252,7 +252,7 @@ const WhatsappPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50 pt-24 pb-8 px-4 animate-fadeIn">
+    <div className="min-h-screen bg-background pt-24 pb-8 px-4 animate-fadeIn">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="text-center mb-8">
@@ -262,31 +262,31 @@ const WhatsappPage = () => {
           <h1 className="text-4xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent mb-4">
             WhatsApp Message Sender
           </h1>
-          <p className="text-gray-600 text-lg max-w-2xl mx-auto">
+          <p className="text-text-body text-lg max-w-2xl mx-auto">
             Send WhatsApp messages instantly without saving contacts. Perfect for quick communication and outreach.
           </p>
         </div>
 
         <div className="grid lg:grid-cols-2 gap-8">
           {/* Input Section */}
-          <div className="bg-white rounded-3xl p-8 shadow-xl border border-gray-100">
+          <div className="bg-card-background rounded-3xl p-8 shadow-xl border border-border">
             <div className="flex items-center gap-2 mb-6">
               <Send className="w-5 h-5 text-green-600" />
-              <h2 className="text-2xl font-bold text-gray-900">Compose Message</h2>
+              <h2 className="text-2xl font-bold text-text-heading">Compose Message</h2>
             </div>
 
             <form onSubmit={sendWhatsApp} className="space-y-6">
               {/* Phone Number */}
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-3">
+                <label className="block text-sm font-semibold text-text-body mb-3">
                   Phone Number (with country code)
                 </label>
                 <div className="relative">
-                  <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+                  <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-text-muted" />
                   <input
                     type="tel"
                     name="phoneNumber"
-                    className="w-full pl-12 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-green-300 focus:border-green-300 transition-all"
+                    className="w-full pl-12 pr-4 py-3 border-2 border-border bg-input-background text-text-heading rounded-xl focus:ring-2 focus:ring-primary-accent focus:border-primary-accent transition-all"
                     placeholder="+1234567890"
                     required
                     onChange={(e) => {
@@ -294,48 +294,48 @@ const WhatsappPage = () => {
                     }}
                   />
                 </div>
-                <p className="text-xs text-gray-500 mt-2">
+                <p className="text-xs text-text-muted mt-2">
                   Include country code (e.g., +1 for US, +91 for India)
                 </p>
               </div>
 
               {/* Message */}
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-3">
+                <label className="block text-sm font-semibold text-text-body mb-3">
                   Message Content
                 </label>
                 <div className="relative">
-                  <MessageSquare className="absolute left-3 top-3 w-5 h-5 text-gray-400" />
+                  <MessageSquare className="absolute left-3 top-3 w-5 h-5 text-text-muted" />
                   <textarea
                     name="whatsappMessage"
                     rows="6"
-                    className="w-full pl-12 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-green-300 focus:border-green-300 transition-all resize-none"
+                    className="w-full pl-12 pr-4 py-3 border-2 border-border bg-input-background text-text-heading rounded-xl focus:ring-2 focus:ring-primary-accent focus:border-primary-accent transition-all resize-none"
                     placeholder="Type your WhatsApp message here..."
                     required
                   />
                 </div>
-                <p className="text-xs text-gray-500 mt-2">
+                <p className="text-xs text-text-muted mt-2">
                   You can use emojis and line breaks in your message
                 </p>
               </div>
 
               {/* Delay */}
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-3">
+                <label className="block text-sm font-semibold text-text-body mb-3">
                   Send Delay (in seconds) - Optional
                 </label>
                 <div className="relative">
-                  <Clock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+                  <Clock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-text-muted" />
                   <input
                     type="number"
                     name="messageDelay"
                     min="0"
                     max="60"
-                    className="w-full pl-12 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-green-300 focus:border-green-300 transition-all"
+                    className="w-full pl-12 pr-4 py-3 border-2 border-border bg-input-background text-text-heading rounded-xl focus:ring-2 focus:ring-primary-accent focus:border-primary-accent transition-all"
                     placeholder="0"
                   />
                 </div>
-                <p className="text-xs text-gray-500 mt-2">
+                <p className="text-xs text-text-muted mt-2">
                   Delay before opening WhatsApp (0-60 seconds)
                 </p>
               </div>
@@ -364,7 +364,7 @@ const WhatsappPage = () => {
                   <button
                     type="button"
                     onClick={resetForm}
-                    className="px-6 py-4 bg-gray-100 text-gray-700 font-semibold rounded-xl hover:bg-gray-200 transition-colors"
+                    className="px-6 py-4 bg-secondary-button text-text-body font-semibold rounded-xl hover:bg-opacity-80 transition-colors"
                   >
                     Reset
                   </button>
@@ -374,10 +374,10 @@ const WhatsappPage = () => {
           </div>
 
           {/* Preview Section */}
-          <div className="bg-white rounded-3xl p-8 shadow-xl border border-gray-100">
+          <div className="bg-card-background rounded-3xl p-8 shadow-xl border border-border">
             <div className="flex items-center gap-2 mb-6">
               <Eye className="w-5 h-5 text-emerald-600" />
-              <h2 className="text-2xl font-bold text-gray-900">Message Preview</h2>
+              <h2 className="text-2xl font-bold text-text-heading">Message Preview</h2>
             </div>
             
             {showPreview ? (
@@ -415,40 +415,40 @@ const WhatsappPage = () => {
               </div>
             ) : (
               <div className="flex flex-col items-center justify-center py-16 text-center">
-                <div className="w-24 h-24 bg-gray-100 rounded-2xl flex items-center justify-center mb-4">
-                  <MessageSquare className="w-12 h-12 text-gray-400" />
+                <div className="w-24 h-24 bg-card-hover rounded-2xl flex items-center justify-center mb-4">
+                  <MessageSquare className="w-12 h-12 text-text-muted" />
                 </div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-2">No Message Prepared</h3>
-                <p className="text-gray-500">Fill in the form and click "Send Message" to see your preview</p>
+                <h3 className="text-xl font-semibold text-text-heading mb-2">No Message Prepared</h3>
+                <p className="text-text-muted">Fill in the form and click "Send Message" to see your preview</p>
               </div>
             )}
           </div>
         </div>
 
         {/* Features Section */}
-        <div className="mt-12 bg-white rounded-3xl p-8 shadow-xl border border-gray-100">
-          <h3 className="text-2xl font-bold text-gray-900 mb-6 text-center">WhatsApp Features</h3>
+        <div className="mt-12 bg-card-background rounded-3xl p-8 shadow-xl border border-border">
+          <h3 className="text-2xl font-bold text-text-heading mb-6 text-center">WhatsApp Features</h3>
           <div className="grid md:grid-cols-3 gap-6">
             <div className="text-center">
               <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center mx-auto mb-3">
                 <Phone className="w-6 h-6 text-green-600" />
               </div>
-              <h4 className="font-semibold text-gray-900 mb-2">No Contact Saving</h4>
-              <p className="text-sm text-gray-600">Send messages without adding contacts to your phone</p>
+              <h4 className="font-semibold text-text-heading mb-2">No Contact Saving</h4>
+              <p className="text-sm text-text-body">Send messages without adding contacts to your phone</p>
             </div>
             <div className="text-center">
               <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center mx-auto mb-3">
                 <Clock className="w-6 h-6 text-blue-600" />
               </div>
-              <h4 className="font-semibold text-gray-900 mb-2">Delayed Sending</h4>
-              <p className="text-sm text-gray-600">Set a delay before opening WhatsApp</p>
+              <h4 className="font-semibold text-text-heading mb-2">Delayed Sending</h4>
+              <p className="text-sm text-text-body">Set a delay before opening WhatsApp</p>
             </div>
             <div className="text-center">
               <div className="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center mx-auto mb-3">
                 <MessageSquare className="w-6 h-6 text-purple-600" />
               </div>
-              <h4 className="font-semibold text-gray-900 mb-2">Rich Messages</h4>
-              <p className="text-sm text-gray-600">Support for emojis, line breaks, and formatting</p>
+              <h4 className="font-semibold text-text-heading mb-2">Rich Messages</h4>
+              <p className="text-sm text-text-body">Support for emojis, line breaks, and formatting</p>
             </div>
           </div>
         </div>

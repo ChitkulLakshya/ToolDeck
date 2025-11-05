@@ -3,7 +3,7 @@ import { useToast } from '../contexts/ToastContext';
 import { Tldraw } from 'tldraw';
 import * as pdfjsLib from 'pdfjs-dist';
 import { PDFDocument, rgb } from 'pdf-lib';
-import { Upload, FileText, Save, Download } from 'lucide-react';
+import { Upload, FileText, Save, Download, Trash2 } from 'lucide-react';
 import 'tldraw/tldraw.css';
 
 // Set worker source - using jsdelivr CDN with proper CORS headers
@@ -16,7 +16,15 @@ const PDFEditorControls = ({ editor, onFileLoaded, toast }) => {
 
   const handleFileChange = async (event) => {
     const file = event.target.files[0];
-    if (!file || !editor) return;
+    if (!file) {
+      toast.warning('No file selected');
+      return;
+    }
+
+    if (!editor) {
+      toast.error('Editor not ready. Please wait and try again.');
+      return;
+    }
 
     // Validate file type
     if (file.type !== 'application/pdf') {
@@ -28,8 +36,8 @@ const PDFEditorControls = ({ editor, onFileLoaded, toast }) => {
     // Store the file
     originalPdfFileRef.current = file;
     
-    // Notify parent that file is being loaded
-    onFileLoaded(true);
+    // Show loading state
+    toast.info('Loading PDF...');
 
     try {
       // Read file as ArrayBuffer
@@ -159,6 +167,9 @@ const PDFEditorControls = ({ editor, onFileLoaded, toast }) => {
       // Zoom to fit all pages
       editor.zoomToFit();
       
+      // Notify parent that file is loaded AFTER successful rendering
+      onFileLoaded(true);
+      
       console.log('PDF loaded successfully:', numPages, 'pages');
       toast.success(`PDF loaded successfully: ${numPages} page(s)`);
     } catch (error) {
@@ -260,6 +271,28 @@ const PDFEditorControls = ({ editor, onFileLoaded, toast }) => {
     }
   };
 
+  const handleClearCanvas = () => {
+    if (!editor) return;
+    
+    // Clear all shapes from canvas
+    const allShapes = editor.getCurrentPageShapes();
+    if (allShapes.length > 0) {
+      editor.deleteShapes(allShapes.map(shape => shape.id));
+      toast.success('Canvas cleared');
+    }
+    
+    // Clear file reference
+    originalPdfFileRef.current = null;
+    
+    // Reset loaded state
+    onFileLoaded(false);
+    
+    // Reset file input
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+  };
+
   return (
     <header className="flex items-center justify-between px-6 py-3 bg-card-background border-b border-border shadow-sm" style={{zIndex: 1000}}>
       <div className="flex items-center gap-4">
@@ -278,10 +311,27 @@ const PDFEditorControls = ({ editor, onFileLoaded, toast }) => {
         />
         <button
           onClick={() => fileInputRef.current?.click()}
-          className="flex items-center gap-2 px-4 py-2.5 bg-success text-white border-0 rounded-lg cursor-pointer font-semibold text-sm shadow hover:opacity-90 transition-all"
+          disabled={!editor}
+          className={`flex items-center gap-2 px-4 py-2.5 text-white border-0 rounded-lg font-semibold text-sm shadow transition-all ${
+            editor
+              ? 'bg-success cursor-pointer hover:opacity-90'
+              : 'bg-gray-400 cursor-not-allowed opacity-50'
+          }`}
         >
           <Upload size={16} />
           Upload PDF
+        </button>
+        <button
+          onClick={handleClearCanvas}
+          disabled={!editor || !originalPdfFileRef.current}
+          className={`flex items-center gap-2 px-4 py-2.5 text-white border-0 rounded-lg font-semibold text-sm shadow transition-all ${
+            editor && originalPdfFileRef.current
+              ? 'bg-danger cursor-pointer hover:opacity-90'
+              : 'bg-gray-400 cursor-not-allowed opacity-50'
+          }`}
+        >
+          <Trash2 size={16} />
+          Clear
         </button>
         <button
           onClick={handleSavePdf}
@@ -304,6 +354,11 @@ const PDFEditorPage = () => {
   const toast = useToast();
   const [pdfLoaded, setPdfLoaded] = useState(false);
   const [editor, setEditor] = useState(null);
+
+  const handleEditorMount = (editorInstance) => {
+    console.log('Tldraw editor mounted:', editorInstance ? 'Success' : 'Failed');
+    setEditor(editorInstance);
+  };
 
   return (
     <div style={{ 
@@ -359,7 +414,7 @@ const PDFEditorPage = () => {
           width: '100%',
           height: '100%'
         }}>
-          <Tldraw onMount={(editor) => setEditor(editor)} />
+          <Tldraw onMount={handleEditorMount} />
         </div>
       </div>
     </div>
