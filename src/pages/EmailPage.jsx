@@ -110,7 +110,7 @@ const EmailPage = () => {
       
     } catch (error) {
       console.error("Error generating email:", error);
-      toast.error(error.message || "Failed to generate email");
+      toast.error(error.message || "Failed to generate email. Please check your backend connection.");
     } finally {
       setIsGenerating(false);
     }
@@ -189,55 +189,55 @@ const EmailPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-cyan-50 via-blue-50 to-purple-50 pt-24 pb-8 px-4 animate-fadeIn">
+    <div className="min-h-screen bg-background pt-24 pb-8 px-4 animate-fadeIn">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-2xl mb-4 shadow-lg">
+          <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-primary-accent to-secondary-accent rounded-2xl mb-4 shadow-lg">
             <Wand2 className="w-8 h-8 text-white" />
           </div>
-          <h1 className="text-5xl font-extrabold bg-gradient-to-r from-cyan-600 to-blue-600 bg-clip-text text-transparent mb-4">
+          <h1 className="text-5xl font-extrabold bg-gradient-to-r from-primary-accent to-secondary-accent bg-clip-text text-transparent mb-4">
             AI Email Generator
           </h1>
-          <p className="text-gray-600 text-lg max-w-2xl mx-auto">
+          <p className="text-text-body text-lg max-w-2xl mx-auto">
             Upload your event banner, provide context, and let AI craft perfect professional emails instantly. Perfect for clubs, events, and organizations.
           </p>
         </div>
 
         <div className="grid lg:grid-cols-2 gap-8">
           {/* Input Section */}
-          <div className="bg-white rounded-3xl p-8 shadow-xl border border-gray-100">
+          <div className="bg-card-background rounded-3xl p-8 shadow-xl border border-border">
             <div className="flex items-center gap-2 mb-6">
-              <Sparkles className="w-5 h-5 text-cyan-600" />
-              <h2 className="text-2xl font-bold text-gray-900">Generate Email</h2>
+              <Sparkles className="w-5 h-5 text-primary-accent" />
+              <h2 className="text-2xl font-bold text-text-heading">Generate Email</h2>
             </div>
 
             <div className="space-y-6">
               {/* Sender Details */}
-              <div className="bg-gradient-to-br from-cyan-50 to-blue-50 rounded-2xl p-6 border border-cyan-100">
-                <h3 className="font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                  <Mail className="w-4 h-4 text-cyan-600" />
+              <div className="bg-background rounded-2xl p-6 border border-border">
+                <h3 className="font-semibold text-text-heading mb-4 flex items-center gap-2">
+                  <Mail className="w-4 h-4 text-primary-accent" />
                   Sender Information
                 </h3>
                 <div className="space-y-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Your Name</label>
+                    <label className="block text-sm font-medium text-text-body mb-2">Your Name</label>
                     <input
                       type="text"
                       value={senderName}
                       onChange={(e) => setSenderName(e.target.value)}
-                      className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-cyan-300 focus:border-cyan-300"
+                      className="w-full px-4 py-3 border-2 border-border rounded-xl focus:ring-2 focus:ring-primary-accent focus:border-primary-accent bg-background text-text-body"
                       placeholder="John Doe"
                       required
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Your Email</label>
+                    <label className="block text-sm font-medium text-text-body mb-2">Your Email</label>
                     <input
                       type="email"
                       value={senderEmail}
                       onChange={(e) => setSenderEmail(e.target.value)}
-                      className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-cyan-300 focus:border-cyan-300"
+                      className="w-full px-4 py-3 border-2 border-border rounded-xl focus:ring-2 focus:ring-primary-accent focus:border-primary-accent bg-background text-text-body"
                       placeholder="john@example.com"
                       required
                     />
@@ -247,12 +247,12 @@ const EmailPage = () => {
 
               {/* Event Image Upload */}
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-3">
+                <label className="block text-sm font-semibold text-text-body mb-3">
                   Upload Event Banner (Optional)
                 </label>
                 <div
                   onClick={() => fileInputRef.current?.click()}
-                  className="relative border-2 border-dashed border-gray-300 rounded-2xl p-8 text-center cursor-pointer hover:border-cyan-400 transition-all"
+                  className="relative border-2 border-dashed border-border rounded-2xl p-8 text-center cursor-pointer hover:border-primary-accent transition-all bg-card-background"
                 >
                   <input
                     ref={fileInputRef}
@@ -269,21 +269,21 @@ const EmailPage = () => {
                         alt="Event banner" 
                         className="max-h-48 mx-auto rounded-lg shadow-lg"
                       />
-                      <div className="flex items-center justify-center gap-2 text-sm text-green-600">
+                      <div className="flex items-center justify-center gap-2 text-sm text-success">
                         <CheckCircle className="w-4 h-4" />
                         Image uploaded successfully
                       </div>
                     </div>
                   ) : (
                     <div className="space-y-4">
-                      <div className="w-16 h-16 bg-cyan-100 rounded-2xl flex items-center justify-center mx-auto">
-                        <ImageIcon className="w-8 h-8 text-cyan-600" />
+                      <div className="w-16 h-16 bg-card-background border border-border rounded-2xl flex items-center justify-center mx-auto">
+                        <ImageIcon className="w-8 h-8 text-primary-accent" />
                       </div>
                       <div>
-                        <p className="text-lg font-medium text-gray-900">
+                        <p className="text-lg font-medium text-text-heading">
                           Drop event banner here or click to upload
                         </p>
-                        <p className="text-sm text-gray-500 mt-1">
+                        <p className="text-sm text-text-muted mt-1">
                           AI will analyze the image to understand your event
                         </p>
                       </div>
@@ -294,18 +294,18 @@ const EmailPage = () => {
 
               {/* Context Input */}
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-3">
+                <label className="block text-sm font-semibold text-text-body mb-3">
                   Event Context / Purpose
                 </label>
                 <textarea
                   value={context}
                   onChange={(e) => setContext(e.target.value)}
                   rows="4"
-                  className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-cyan-300 focus:border-cyan-300 resize-none"
+                  className="w-full px-4 py-3 border-2 border-border rounded-xl focus:ring-2 focus:ring-primary-accent focus:border-primary-accent resize-none bg-background text-text-body"
                   placeholder="Example: 'Tech club orientation event for freshers. Casual and welcoming tone. Include registration link and date.'"
                   required
                 />
-                <p className="text-xs text-gray-500 mt-2">
+                <p className="text-xs text-text-muted mt-2">
                   💡 Tip: Be specific about tone, audience, and key details
                 </p>
               </div>
@@ -314,7 +314,7 @@ const EmailPage = () => {
               <button
                 onClick={generateAIEmail}
                 disabled={isGenerating || (!eventImage && !context)}
-                className="w-full flex items-center justify-center gap-2 py-4 bg-gradient-to-r from-cyan-500 to-blue-500 text-white font-semibold rounded-2xl text-lg hover:from-cyan-600 hover:to-blue-600 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl"
+                className="w-full flex items-center justify-center gap-2 py-4 bg-gradient-to-r from-primary-accent to-secondary-accent text-white font-semibold rounded-2xl text-lg hover:opacity-90 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl"
               >
                 {isGenerating ? (
                   <>
@@ -332,24 +332,24 @@ const EmailPage = () => {
           </div>
 
           {/* Preview & Send Section */}
-          <div className="bg-white rounded-3xl p-8 shadow-xl border border-gray-100">
+          <div className="bg-card-background rounded-3xl p-8 shadow-xl border border-border">
             <div className="flex items-center gap-2 mb-6">
-              <Eye className="w-5 h-5 text-blue-600" />
-              <h2 className="text-2xl font-bold text-gray-900">Email Preview & Send</h2>
+              <Eye className="w-5 h-5 text-secondary-accent" />
+              <h2 className="text-2xl font-bold text-text-heading">Email Preview & Send</h2>
             </div>
 
             {showPreview ? (
               <div className="space-y-6">
                 {/* Generated Email Preview */}
-                <div className="bg-gradient-to-br from-gray-50 to-blue-50 rounded-2xl p-6 border border-blue-100">
+                <div className="bg-background rounded-2xl p-6 border border-border">
                   <div className="space-y-4">
                     {/* Subject */}
                     <div>
                       <div className="flex items-center justify-between mb-2">
-                        <label className="text-sm font-semibold text-gray-700">Subject</label>
+                        <label className="text-sm font-semibold text-text-body">Subject</label>
                         <button
                           onClick={() => copyToClipboard(generatedEmail.subject)}
-                          className="text-xs text-cyan-600 hover:text-cyan-700 flex items-center gap-1"
+                          className="text-xs text-primary-accent hover:text-secondary-accent flex items-center gap-1"
                         >
                           <Copy className="w-3 h-3" />
                           Copy
@@ -359,17 +359,17 @@ const EmailPage = () => {
                         type="text"
                         value={generatedEmail.subject}
                         onChange={(e) => setGeneratedEmail({...generatedEmail, subject: e.target.value})}
-                        className="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-cyan-300 font-medium"
+                        className="w-full px-4 py-3 bg-card-background border-2 border-border rounded-xl focus:ring-2 focus:ring-primary-accent font-medium text-text-body"
                       />
                     </div>
 
                     {/* Body */}
                     <div>
                       <div className="flex items-center justify-between mb-2">
-                        <label className="text-sm font-semibold text-gray-700">Email Body</label>
+                        <label className="text-sm font-semibold text-text-body">Email Body</label>
                         <button
                           onClick={() => copyToClipboard(generatedEmail.body)}
-                          className="text-xs text-cyan-600 hover:text-cyan-700 flex items-center gap-1"
+                          className="text-xs text-primary-accent hover:text-secondary-accent flex items-center gap-1"
                         >
                           <Copy className="w-3 h-3" />
                           Copy
@@ -379,16 +379,16 @@ const EmailPage = () => {
                         value={generatedEmail.body}
                         onChange={(e) => setGeneratedEmail({...generatedEmail, body: e.target.value})}
                         rows="12"
-                        className="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-cyan-300 resize-none"
+                        className="w-full px-4 py-3 bg-card-background border-2 border-border rounded-xl focus:ring-2 focus:ring-primary-accent resize-none text-text-body"
                       />
                     </div>
                   </div>
                 </div>
 
                 {/* Send Mode Selection */}
-                <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-2xl p-6 border border-purple-100">
-                  <h3 className="font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                    <Send className="w-4 h-4 text-purple-600" />
+                <div className="bg-background rounded-2xl p-6 border border-border">
+                  <h3 className="font-semibold text-text-heading mb-4 flex items-center gap-2">
+                    <Send className="w-4 h-4 text-primary-accent" />
                     Send Options
                   </h3>
                   
@@ -398,8 +398,8 @@ const EmailPage = () => {
                       onClick={() => setSendMode("single")}
                       className={`flex items-center justify-center gap-2 px-4 py-3 rounded-xl font-medium transition-all ${
                         sendMode === "single"
-                          ? 'bg-purple-600 text-white shadow-lg'
-                          : 'bg-white text-gray-700 border-2 border-gray-200 hover:border-purple-300'
+                          ? 'bg-primary-accent text-white shadow-lg'
+                          : 'bg-card-background text-text-body border-2 border-border hover:border-primary-accent'
                       }`}
                     >
                       <Mail className="w-4 h-4" />
@@ -409,8 +409,8 @@ const EmailPage = () => {
                       onClick={() => setSendMode("bulk")}
                       className={`flex items-center justify-center gap-2 px-4 py-3 rounded-xl font-medium transition-all ${
                         sendMode === "bulk"
-                          ? 'bg-purple-600 text-white shadow-lg'
-                          : 'bg-white text-gray-700 border-2 border-gray-200 hover:border-purple-300'
+                          ? 'bg-primary-accent text-white shadow-lg'
+                          : 'bg-card-background text-text-body border-2 border-border hover:border-primary-accent'
                       }`}
                     >
                       <Users className="w-4 h-4" />
@@ -421,27 +421,27 @@ const EmailPage = () => {
                   {/* Recipient Input */}
                   {sendMode === "single" ? (
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">Recipient Email</label>
+                      <label className="block text-sm font-medium text-text-body mb-2">Recipient Email</label>
                       <input
                         type="email"
                         value={recipientEmail}
                         onChange={(e) => setRecipientEmail(e.target.value)}
-                        className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-300"
+                        className="w-full px-4 py-3 border-2 border-border rounded-xl focus:ring-2 focus:ring-primary-accent bg-card-background text-text-body"
                         placeholder="recipient@example.com"
                         required
                       />
                     </div>
                   ) : (
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">Upload CSV File</label>
+                      <label className="block text-sm font-medium text-text-body mb-2">Upload CSV File</label>
                       <input
                         ref={csvInputRef}
                         type="file"
                         accept=".csv"
                         onChange={handleCsvUpload}
-                        className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-300 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-purple-100 file:text-purple-700 hover:file:bg-purple-200"
+                        className="w-full px-4 py-3 border-2 border-border rounded-xl focus:ring-2 focus:ring-primary-accent file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-primary-accent/10 file:text-primary-accent hover:file:bg-primary-accent/20 bg-card-background text-text-body"
                       />
-                      <p className="text-xs text-gray-500 mt-2">
+                      <p className="text-xs text-text-muted mt-2">
                         CSV format: email,name (one recipient per line)
                       </p>
                     </div>
@@ -450,7 +450,7 @@ const EmailPage = () => {
 
                 {/* Attachments */}
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-3">
+                  <label className="block text-sm font-semibold text-text-body mb-3">
                     Attachments (Optional)
                   </label>
                   <input
@@ -458,14 +458,14 @@ const EmailPage = () => {
                     type="file"
                     multiple
                     onChange={handleAttachments}
-                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-cyan-300 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-cyan-100 file:text-cyan-700 hover:file:bg-cyan-200"
+                    className="w-full px-4 py-3 border-2 border-border rounded-xl focus:ring-2 focus:ring-primary-accent file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-secondary-accent/10 file:text-secondary-accent hover:file:bg-secondary-accent/20 bg-card-background text-text-body"
                   />
                   {attachments.length > 0 && (
                     <div className="mt-2 flex flex-wrap gap-2">
                       {attachments.map((file, index) => (
-                        <div key={index} className="flex items-center gap-2 px-3 py-1 bg-gray-100 rounded-lg text-sm">
-                          <FileText className="w-4 h-4 text-gray-600" />
-                          <span className="text-gray-700">{file.name}</span>
+                        <div key={index} className="flex items-center gap-2 px-3 py-1 bg-card-background border border-border rounded-lg text-sm">
+                          <FileText className="w-4 h-4 text-text-muted" />
+                          <span className="text-text-body">{file.name}</span>
                         </div>
                       ))}
                     </div>
@@ -477,7 +477,7 @@ const EmailPage = () => {
                   <button
                     onClick={sendEmailHandler}
                     disabled={isSending}
-                    className="flex-1 flex items-center justify-center gap-2 py-4 bg-gradient-to-r from-green-500 to-emerald-500 text-white font-semibold rounded-2xl text-lg hover:from-green-600 hover:to-emerald-600 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl"
+                    className="flex-1 flex items-center justify-center gap-2 py-4 bg-gradient-to-r from-success to-emerald-500 text-white font-semibold rounded-2xl text-lg hover:opacity-90 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl"
                   >
                     {isSending ? (
                       <>
@@ -494,7 +494,7 @@ const EmailPage = () => {
                   
                   <button
                     onClick={resetForm}
-                    className="px-6 py-4 bg-gray-100 text-gray-700 font-semibold rounded-2xl hover:bg-gray-200 transition-colors"
+                    className="px-6 py-4 bg-card-background text-text-body border border-border font-semibold rounded-2xl hover:bg-background transition-colors"
                   >
                     <RefreshCw className="w-5 h-5" />
                   </button>
@@ -502,47 +502,47 @@ const EmailPage = () => {
               </div>
             ) : (
               <div className="flex flex-col items-center justify-center py-16 text-center">
-                <div className="w-24 h-24 bg-gradient-to-br from-cyan-100 to-blue-100 rounded-2xl flex items-center justify-center mb-4">
-                  <Mail className="w-12 h-12 text-cyan-500" />
+                <div className="w-24 h-24 bg-card-background border border-border rounded-2xl flex items-center justify-center mb-4">
+                  <Mail className="w-12 h-12 text-primary-accent" />
                 </div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-2">No Email Generated</h3>
-                <p className="text-gray-500 max-w-sm">Upload an event banner and provide context to generate your email</p>
+                <h3 className="text-xl font-semibold text-text-heading mb-2">No Email Generated</h3>
+                <p className="text-text-muted max-w-sm">Upload an event banner and provide context to generate your email</p>
               </div>
             )}
           </div>
         </div>
 
         {/* Features Section */}
-        <div className="mt-12 bg-white rounded-3xl p-8 shadow-xl border border-gray-100">
-          <h3 className="text-2xl font-bold text-gray-900 mb-6 text-center">AI Email Features</h3>
+        <div className="mt-12 bg-card-background rounded-3xl p-8 shadow-xl border border-border">
+          <h3 className="text-2xl font-bold text-text-heading mb-6 text-center">AI Email Features</h3>
           <div className="grid md:grid-cols-4 gap-6">
             <div className="text-center">
-              <div className="w-12 h-12 bg-cyan-100 rounded-xl flex items-center justify-center mx-auto mb-3">
-                <Wand2 className="w-6 h-6 text-cyan-600" />
+              <div className="w-12 h-12 bg-primary-accent/10 border border-border rounded-xl flex items-center justify-center mx-auto mb-3">
+                <Wand2 className="w-6 h-6 text-primary-accent" />
               </div>
-              <h4 className="font-semibold text-gray-900 mb-2">AI-Powered</h4>
-              <p className="text-sm text-gray-600">Advanced AI analyzes your event and generates perfect emails</p>
+              <h4 className="font-semibold text-text-heading mb-2">AI-Powered</h4>
+              <p className="text-sm text-text-body">Advanced AI analyzes your event and generates perfect emails</p>
             </div>
             <div className="text-center">
-              <div className="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center mx-auto mb-3">
-                <Users className="w-6 h-6 text-purple-600" />
+              <div className="w-12 h-12 bg-primary-accent/10 border border-border rounded-xl flex items-center justify-center mx-auto mb-3">
+                <Users className="w-6 h-6 text-primary-accent" />
               </div>
-              <h4 className="font-semibold text-gray-900 mb-2">Bulk Sending</h4>
-              <p className="text-sm text-gray-600">Send to multiple recipients via CSV upload</p>
+              <h4 className="font-semibold text-text-heading mb-2">Bulk Sending</h4>
+              <p className="text-sm text-text-body">Send to multiple recipients via CSV upload</p>
             </div>
             <div className="text-center">
-              <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center mx-auto mb-3">
-                <Zap className="w-6 h-6 text-green-600" />
+              <div className="w-12 h-12 bg-success/10 border border-border rounded-xl flex items-center justify-center mx-auto mb-3">
+                <Zap className="w-6 h-6 text-success" />
               </div>
-              <h4 className="font-semibold text-gray-900 mb-2">Instant Generation</h4>
-              <p className="text-sm text-gray-600">Get professional emails in seconds</p>
+              <h4 className="font-semibold text-text-heading mb-2">Instant Generation</h4>
+              <p className="text-sm text-text-body">Get professional emails in seconds</p>
             </div>
             <div className="text-center">
-              <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center mx-auto mb-3">
-                <FileUp className="w-6 h-6 text-blue-600" />
+              <div className="w-12 h-12 bg-secondary-accent/10 border border-border rounded-xl flex items-center justify-center mx-auto mb-3">
+                <FileUp className="w-6 h-6 text-secondary-accent" />
               </div>
-              <h4 className="font-semibold text-gray-900 mb-2">Attachments</h4>
-              <p className="text-sm text-gray-600">Include PDFs, images, and other files</p>
+              <h4 className="font-semibold text-text-heading mb-2">Attachments</h4>
+              <p className="text-sm text-text-body">Include PDFs, images, and other files</p>
             </div>
           </div>
         </div>
