@@ -261,36 +261,14 @@ const PDFEditorControls = ({ editor, onFileLoaded, toast }) => {
   };
 
   return (
-    <header style={{
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'space-between',
-      padding: '0.75rem 1.5rem',
-      backgroundColor: 'white',
-      borderBottom: '1px solid #e5e7eb',
-      zIndex: 1000,
-      boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)',
-    }}>
-      <div style={{
-        display: 'flex',
-        alignItems: 'center',
-        gap: '1rem',
-      }}>
-        <h1 style={{
-          fontSize: '1.25rem',
-          fontWeight: '700',
-          color: '#111827',
-          margin: 0,
-        }}>
+    <header className="flex items-center justify-between px-6 py-3 bg-card-background border-b border-border shadow-sm" style={{zIndex: 1000}}>
+      <div className="flex items-center gap-4">
+        <h1 className="text-xl font-bold text-text-heading m-0">
           PDF Editor
         </h1>
       </div>
       
-      <div style={{
-        display: 'flex',
-        gap: '0.75rem',
-        alignItems: 'center',
-      }}>
+      <div className="flex gap-3 items-center">
         <input
           ref={fileInputRef}
           type="file"
@@ -300,31 +278,7 @@ const PDFEditorControls = ({ editor, onFileLoaded, toast }) => {
         />
         <button
           onClick={() => fileInputRef.current?.click()}
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '0.5rem',
-            padding: '0.625rem 1.25rem',
-            backgroundColor: '#10b981',
-            color: 'white',
-            border: 'none',
-            borderRadius: '0.5rem',
-            cursor: 'pointer',
-            fontWeight: '600',
-            fontSize: '0.875rem',
-            boxShadow: '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
-            transition: 'all 0.2s',
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.backgroundColor = '#059669';
-            e.currentTarget.style.transform = 'translateY(-1px)';
-            e.currentTarget.style.boxShadow = '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)';
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.backgroundColor = '#10b981';
-            e.currentTarget.style.transform = 'translateY(0)';
-            e.currentTarget.style.boxShadow = '0 1px 2px 0 rgba(0, 0, 0, 0.05)';
-          }}
+          className="flex items-center gap-2 px-4 py-2.5 bg-success text-white border-0 rounded-lg cursor-pointer font-semibold text-sm shadow hover:opacity-90 transition-all"
         >
           <Upload size={16} />
           Upload PDF
@@ -332,35 +286,11 @@ const PDFEditorControls = ({ editor, onFileLoaded, toast }) => {
         <button
           onClick={handleSavePdf}
           disabled={!originalPdfFileRef.current}
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '0.5rem',
-            padding: '0.625rem 1.25rem',
-            backgroundColor: originalPdfFileRef.current ? '#3b82f6' : '#9ca3af',
-            color: 'white',
-            border: 'none',
-            borderRadius: '0.5rem',
-            cursor: originalPdfFileRef.current ? 'pointer' : 'not-allowed',
-            fontWeight: '600',
-            fontSize: '0.875rem',
-            boxShadow: '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
-            transition: 'all 0.2s',
-          }}
-          onMouseEnter={(e) => {
-            if (originalPdfFileRef.current) {
-              e.currentTarget.style.backgroundColor = '#2563eb';
-              e.currentTarget.style.transform = 'translateY(-1px)';
-              e.currentTarget.style.boxShadow = '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)';
-            }
-          }}
-          onMouseLeave={(e) => {
-            if (originalPdfFileRef.current) {
-              e.currentTarget.style.backgroundColor = '#3b82f6';
-              e.currentTarget.style.transform = 'translateY(0)';
-              e.currentTarget.style.boxShadow = '0 1px 2px 0 rgba(0, 0, 0, 0.05)';
-            }
-          }}
+          className={`flex items-center gap-2 px-4 py-2.5 text-white border-0 rounded-lg font-semibold text-sm shadow transition-all ${
+            originalPdfFileRef.current 
+              ? 'bg-primary-accent cursor-pointer hover:opacity-90' 
+              : 'bg-gray-400 cursor-not-allowed opacity-50'
+          }`}
         >
           <Download size={16} />
           Save PDF
@@ -376,77 +306,25 @@ const PDFEditorPage = () => {
   const [editor, setEditor] = useState(null);
 
   return (
-    <div style={{ 
-      width: '100vw', 
-      height: '100vh', 
-      display: 'flex',
-      flexDirection: 'column',
-      paddingTop: '64px', // Account for fixed header
-    }}>
+    <div className="w-screen h-screen flex flex-col pt-16">
       <PDFEditorControls editor={editor} onFileLoaded={setPdfLoaded} toast={toast} />
       
-      <div style={{ 
-        flexGrow: 1,
-        position: 'relative',
-      }}>
+      <div className="flex-grow relative">
         {!pdfLoaded && (
-          <div style={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            backgroundColor: '#f9fafb',
-            zIndex: 10,
-          }}>
-            <div style={{
-              textAlign: 'center',
-              padding: '3rem',
-              maxWidth: '28rem',
-            }}>
-              <div style={{
-                width: '6rem',
-                height: '6rem',
-                margin: '0 auto 1.5rem',
-                backgroundColor: '#dbeafe',
-                borderRadius: '50%',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}>
-                <FileText size={48} style={{ color: '#3b82f6' }} />
+          <div className="absolute inset-0 flex items-center justify-center bg-background z-10">
+            <div className="text-center p-12 max-w-md">
+              <div className="w-24 h-24 mx-auto mb-6 bg-primary-accent/10 rounded-full flex items-center justify-center">
+                <FileText size={48} className="text-primary-accent" />
               </div>
-              <h2 style={{
-                fontSize: '1.875rem',
-                fontWeight: '700',
-                color: '#111827',
-                marginBottom: '0.75rem',
-              }}>
+              <h2 className="text-3xl font-bold text-text-heading mb-3">
                 PDF Editor
               </h2>
-              <p style={{
-                fontSize: '1rem',
-                color: '#6b7280',
-                marginBottom: '2rem',
-                lineHeight: '1.5',
-              }}>
-                Upload a PDF file to start editing. You can add annotations, edit text, and more using the powerful drawing tools.
+              <p className="text-base text-text-body mb-8 leading-relaxed">
+                Upload a PDF file to start editing. You can add annotations, draw, and use powerful editing tools.
               </p>
-              <div style={{
-                padding: '2rem',
-                border: '2px dashed #d1d5db',
-                borderRadius: '0.75rem',
-                backgroundColor: 'white',
-              }}>
-                <Upload size={32} style={{ color: '#9ca3af', margin: '0 auto 1rem' }} />
-                <p style={{
-                  fontSize: '0.875rem',
-                  color: '#9ca3af',
-                  marginBottom: '1rem',
-                }}>
+              <div className="p-8 border-2 border-dashed border-border rounded-xl bg-card-background">
+                <Upload size={32} className="text-text-muted mx-auto mb-4" />
+                <p className="text-sm text-text-muted mb-4">
                   Click "Upload PDF" button in the toolbar to get started
                 </p>
               </div>
