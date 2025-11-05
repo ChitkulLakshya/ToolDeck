@@ -73,29 +73,39 @@ The Event Team`
     }
 
     // Initialize Gemini model
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    // Using gemini-2.5-flash - Latest model with thinking capability
+    const model = genAI.getGenerativeModel({ 
+      model: "gemini-2.5-flash",
+      generationConfig: {
+        temperature: 0.7,
+        topP: 0.8,
+        topK: 40,
+      },
+      systemInstruction: `You are an expert professional email writer specializing in event invitations and organizational communications. Your task is to create engaging, well-structured emails that are:
+- Clear and concise
+- Professional yet friendly
+- Action-oriented with clear CTAs
+- Properly formatted with sections
+- Free of jargon unless specified
+Always return ONLY valid JSON in the exact format: {"subject": "...", "body": "..."}`
+    });
 
-    let prompt = `You are a professional email writer for events and organizations. Generate a complete, professional email with the following:
+    let prompt = `Generate a professional email for the following event:
 
 Context: ${context}
 
 Requirements:
-1. Create an engaging subject line (max 50 characters)
-2. Write a well-structured email body with:
-   - Professional greeting
-   - Clear introduction
-   - Main content with key details
-   - Call-to-action
-   - Professional closing
-3. Use appropriate tone (formal/casual based on context)
-4. Keep it concise but informative
-5. Include placeholders for specific details like dates, links, etc.
+1. Subject line: Engaging and concise (max 60 characters)
+2. Email body should include:
+   - Warm greeting
+   - Clear event description
+   - Key details (use placeholders like [DATE], [TIME], [VENUE], [LINK] if not provided)
+   - Strong call-to-action
+   - Professional sign-off
+3. Match the tone to the context (formal for corporate, casual for student events, etc.)
+4. Keep the email concise but informative (150-300 words)
 
-Return ONLY a JSON object with this exact structure:
-{
-  "subject": "your subject line here",
-  "body": "your complete email body here"
-}`;
+Return ONLY JSON: {"subject": "your subject here", "body": "your email body here"}`;
 
     let result;
     
@@ -163,7 +173,9 @@ router.post("/send", upload.fields([
   try {
     const { 
       senderEmail, 
-      senderName, 
+      senderName,
+      senderPassword, // User's email password (if using own account)
+      useOwnAccount, // Flag to indicate if user wants to use their own account
       subject, 
       body, 
       sendMode,
@@ -175,34 +187,50 @@ router.post("/send", upload.fields([
       return res.status(400).json({ error: "Missing required fields" });
     }
 
-    // Check if email credentials are configured
-    if (!process.env.EMAIL_USER || !process.env.EMAIL_PASSWORD) {
-      console.warn("Email credentials not configured");
-      
-      // Clean up uploaded files
-      if (req.files) {
-        Object.values(req.files).flat().forEach(file => {
-          if (fs.existsSync(file.path)) {
-            fs.unlinkSync(file.path);
-          }
+    // Determine which credentials to use
+    let emailUser, emailPass;
+    
+    if (useOwnAccount === 'true' || useOwnAccount === true) {
+      // User wants to send from their own account
+      if (!senderPassword) {
+        return res.status(400).json({ error: "Email password required when using your own account" });
+      }
+      emailUser = senderEmail;
+      emailPass = senderPassword;
+      console.log(`Using user's own email account: ${senderEmail}`);
+    } else {
+      // Use server's configured email
+      if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
+        console.warn("Email credentials not configured");
+        
+        // Clean up uploaded files
+        if (req.files) {
+          Object.values(req.files).flat().forEach(file => {
+            if (fs.existsSync(file.path)) {
+              fs.unlinkSync(file.path);
+            }
+          });
+        }
+        
+        // Return mock success
+        return res.json({
+          success: true,
+          message: `Mock: Email would be sent to ${sendMode === 'single' ? recipientEmail : 'multiple recipients'}`,
+          successCount: sendMode === 'single' ? 1 : 10,
+          failCount: 0
         });
       }
-      
-      // Return mock success
-      return res.json({
-        success: true,
-        message: `Mock: Email would be sent to ${sendMode === 'single' ? recipientEmail : 'multiple recipients'}`,
-        successCount: sendMode === 'single' ? 1 : 10,
-        failCount: 0
-      });
+      emailUser = process.env.EMAIL_USER;
+      emailPass = process.env.EMAIL_PASS;
+      console.log(`Using server's email account: ${emailUser}`);
     }
 
-    // Create nodemailer transporter
+    // Create nodemailer transporter with dynamic credentials
     const transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASSWORD
+        user: emailUser,
+        pass: emailPass
       }
     });
 
