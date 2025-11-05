@@ -73,30 +73,39 @@ The Event Team`
     }
 
     // Initialize Gemini model
-    // Using gemini-1.5-pro which is available in v1 API
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-pro" });
+    // Using gemini-2.5-flash - Latest model with thinking capability
+    const model = genAI.getGenerativeModel({ 
+      model: "gemini-2.5-flash",
+      generationConfig: {
+        temperature: 0.7,
+        topP: 0.8,
+        topK: 40,
+      },
+      systemInstruction: `You are an expert professional email writer specializing in event invitations and organizational communications. Your task is to create engaging, well-structured emails that are:
+- Clear and concise
+- Professional yet friendly
+- Action-oriented with clear CTAs
+- Properly formatted with sections
+- Free of jargon unless specified
+Always return ONLY valid JSON in the exact format: {"subject": "...", "body": "..."}`
+    });
 
-    let prompt = `You are a professional email writer for events and organizations. Generate a complete, professional email with the following:
+    let prompt = `Generate a professional email for the following event:
 
 Context: ${context}
 
 Requirements:
-1. Create an engaging subject line (max 50 characters)
-2. Write a well-structured email body with:
-   - Professional greeting
-   - Clear introduction
-   - Main content with key details
-   - Call-to-action
-   - Professional closing
-3. Use appropriate tone (formal/casual based on context)
-4. Keep it concise but informative
-5. Include placeholders for specific details like dates, links, etc.
+1. Subject line: Engaging and concise (max 60 characters)
+2. Email body should include:
+   - Warm greeting
+   - Clear event description
+   - Key details (use placeholders like [DATE], [TIME], [VENUE], [LINK] if not provided)
+   - Strong call-to-action
+   - Professional sign-off
+3. Match the tone to the context (formal for corporate, casual for student events, etc.)
+4. Keep the email concise but informative (150-300 words)
 
-Return ONLY a JSON object with this exact structure:
-{
-  "subject": "your subject line here",
-  "body": "your complete email body here"
-}`;
+Return ONLY JSON: {"subject": "your subject here", "body": "your email body here"}`;
 
     let result;
     
