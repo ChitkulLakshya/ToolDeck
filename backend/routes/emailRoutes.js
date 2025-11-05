@@ -73,7 +73,8 @@ The Event Team`
     }
 
     // Initialize Gemini model
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    // Using gemini-pro as it's more stable and widely available
+    const model = genAI.getGenerativeModel({ model: "gemini-pro" });
 
     let prompt = `You are a professional email writer for events and organizations. Generate a complete, professional email with the following:
 
@@ -176,7 +177,7 @@ router.post("/send", upload.fields([
     }
 
     // Check if email credentials are configured
-    if (!process.env.EMAIL_USER || !process.env.EMAIL_PASSWORD) {
+    if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
       console.warn("Email credentials not configured");
       
       // Clean up uploaded files
@@ -202,7 +203,7 @@ router.post("/send", upload.fields([
       service: "gmail",
       auth: {
         user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASSWORD
+        pass: process.env.EMAIL_PASS
       }
     });
 
