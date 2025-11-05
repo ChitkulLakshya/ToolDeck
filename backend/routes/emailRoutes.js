@@ -73,8 +73,8 @@ The Event Team`
     }
 
     // Initialize Gemini model
-    // Using gemini-pro as it's more stable and widely available
-    const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+    // Using gemini-1.5-pro which is available in v1 API
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-pro" });
 
     let prompt = `You are a professional email writer for events and organizations. Generate a complete, professional email with the following:
 
