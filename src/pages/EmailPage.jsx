@@ -32,6 +32,8 @@ const EmailPage = () => {
   const [csvFile, setCsvFile] = useState(null);
   const [senderEmail, setSenderEmail] = useState("");
   const [senderName, setSenderName] = useState("");
+  const [senderPassword, setSenderPassword] = useState(""); // User's email password
+  const [useOwnAccount, setUseOwnAccount] = useState(false); // Toggle for using own email
   const [recipientEmail, setRecipientEmail] = useState("");
   const [attachments, setAttachments] = useState([]);
   const [sendMode, setSendMode] = useState("single"); // single or bulk
@@ -128,6 +130,11 @@ const EmailPage = () => {
       return;
     }
 
+    if (useOwnAccount && !senderPassword) {
+      toast.warning("Please provide your email password/app password");
+      return;
+    }
+
     if (sendMode === "single" && !recipientEmail) {
       toast.warning("Please provide recipient email");
       return;
@@ -145,6 +152,8 @@ const EmailPage = () => {
       const result = await sendEmail({
         senderEmail,
         senderName,
+        senderPassword: useOwnAccount ? senderPassword : undefined, // Only send if using own account
+        useOwnAccount, // Flag to backend
         subject: generatedEmail.subject,
         body: generatedEmail.body,
         sendMode,
@@ -242,6 +251,52 @@ const EmailPage = () => {
                       required
                     />
                   </div>
+                  
+                  {/* Toggle for using own email account */}
+                  <div className="flex items-center justify-between p-3 bg-card-background rounded-lg border border-border">
+                    <div className="flex items-center gap-2">
+                      <label className="text-sm font-medium text-text-body cursor-pointer" htmlFor="useOwnAccount">
+                        Send from my email account
+                      </label>
+                      <span className="text-xs text-text-muted">(Use your credentials)</span>
+                    </div>
+                    <button
+                      id="useOwnAccount"
+                      type="button"
+                      onClick={() => setUseOwnAccount(!useOwnAccount)}
+                      className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                        useOwnAccount ? 'bg-primary-accent' : 'bg-gray-300'
+                      }`}
+                    >
+                      <span
+                        className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                          useOwnAccount ? 'translate-x-6' : 'translate-x-1'
+                        }`}
+                      />
+                    </button>
+                  </div>
+
+                  {/* Show password field only if using own account */}
+                  {useOwnAccount && (
+                    <div className="space-y-3 p-4 bg-primary-accent/5 rounded-lg border border-primary-accent/20">
+                      <div>
+                        <label className="block text-sm font-medium text-text-body mb-2">
+                          Email Password / App Password
+                        </label>
+                        <input
+                          type="password"
+                          value={senderPassword}
+                          onChange={(e) => setSenderPassword(e.target.value)}
+                          className="w-full px-4 py-3 border-2 border-border rounded-xl focus:ring-2 focus:ring-primary-accent focus:border-primary-accent bg-background text-text-body"
+                          placeholder="••••••••••••••••"
+                          required
+                        />
+                        <p className="text-xs text-text-muted mt-2">
+                          💡 For Gmail: Use <a href="https://myaccount.google.com/apppasswords" target="_blank" rel="noopener noreferrer" className="text-primary-accent hover:underline">App Password</a> (not your regular password)
+                        </p>
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
 
