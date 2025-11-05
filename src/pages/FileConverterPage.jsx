@@ -581,7 +581,7 @@ const FileConverterPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 pt-24 pb-8 px-4 animate-fadeIn">
+    <div className="min-h-screen bg-background pt-24 pb-8 px-4 animate-fadeIn">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="text-center mb-8">
@@ -591,23 +591,23 @@ const FileConverterPage = () => {
           <h1 className="text-5xl font-extrabold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-4">
             Universal File Converter
           </h1>
-          <p className="text-gray-600 text-lg max-w-2xl mx-auto">
+          <p className="text-text-body text-lg max-w-2xl mx-auto">
             Convert files between different formats instantly with advanced quality controls. Supports images, documents, spreadsheets, and more.
           </p>
         </div>
 
         <div className="grid lg:grid-cols-2 gap-8">
           {/* Input Section */}
-          <div className="bg-white rounded-3xl p-8 shadow-xl border border-gray-100">
+          <div className="bg-card-background rounded-3xl p-8 shadow-xl border border-border">
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center gap-2">
                 <Sparkles className="w-5 h-5 text-blue-600" />
-                <h2 className="text-2xl font-bold text-gray-900">Convert File</h2>
+                <h2 className="text-2xl font-bold text-text-heading">Convert File</h2>
               </div>
               <button
                 type="button"
                 onClick={() => setShowSettings(!showSettings)}
-                className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-xl transition-colors"
+                className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-text-body hover:text-text-heading hover:bg-card-hover rounded-xl transition-colors"
               >
                 <Settings className="w-4 h-4" />
                 Settings
@@ -617,16 +617,16 @@ const FileConverterPage = () => {
             <form onSubmit={convertFile} className="space-y-6">
               {/* File Upload Area */}
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-3">
+                <label className="block text-sm font-semibold text-text-body mb-3">
                   Upload File
                 </label>
                 <div
                   className={`relative border-2 border-dashed rounded-2xl p-8 text-center transition-all ${
                     dragActive 
-                      ? 'border-blue-500 bg-blue-50' 
+                      ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20' 
                       : file
-                      ? 'border-green-400 bg-green-50'
-                      : 'border-gray-300 hover:border-gray-400'
+                      ? 'border-green-400 bg-green-50 dark:bg-green-900/20'
+                      : 'border-border hover:border-border-hover bg-input-background'
                   }`}
                   onDragEnter={handleDrag}
                   onDragLeave={handleDrag}
@@ -681,10 +681,10 @@ const FileConverterPage = () => {
                       )}
                       
                       <div>
-                        <p className="text-lg font-semibold text-gray-900 truncate max-w-xs mx-auto">
+                        <p className="text-lg font-semibold text-text-heading truncate max-w-xs mx-auto">
                           {file.name}
                         </p>
-                        <div className="flex items-center justify-center gap-4 mt-2 text-sm text-gray-600">
+                        <div className="flex items-center justify-center gap-4 mt-2 text-sm text-text-body">
                           <span>{(file.size / 1024).toFixed(2)} KB</span>
                           <span>•</span>
                           <span className="capitalize">{file.type.split('/')[1] || 'Unknown'}</span>
@@ -698,14 +698,14 @@ const FileConverterPage = () => {
                     </div>
                   ) : (
                     <div className="space-y-4">
-                      <div className="w-16 h-16 bg-gradient-to-br from-blue-100 to-purple-100 rounded-2xl flex items-center justify-center mx-auto">
+                      <div className="w-16 h-16 bg-gradient-to-br from-blue-100 to-purple-100 dark:from-blue-900/40 dark:to-purple-900/40 rounded-2xl flex items-center justify-center mx-auto">
                         <Upload className="w-8 h-8 text-blue-600" />
                       </div>
                       <div>
-                        <p className="text-lg font-medium text-gray-900">
+                        <p className="text-lg font-medium text-text-heading">
                           Drop files here or click to browse
                         </p>
-                        <p className="text-sm text-gray-500 mt-1">
+                        <p className="text-sm text-text-muted mt-1">
                           Supports images, PDFs, documents, spreadsheets, and text files
                         </p>
                       </div>
@@ -717,7 +717,7 @@ const FileConverterPage = () => {
               {/* Conversion Type Selection */}
               {file && (
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-3">
+                  <label className="block text-sm font-semibold text-text-body mb-3">
                     Convert To
                   </label>
                   <div className="grid grid-cols-2 gap-3">
@@ -730,8 +730,8 @@ const FileConverterPage = () => {
                           onClick={() => setConvertType(option.value)}
                           className={`p-4 rounded-xl border-2 transition-all text-left ${
                             convertType === option.value
-                              ? 'border-blue-500 bg-blue-50 text-blue-700 shadow-md'
-                              : 'border-gray-200 hover:border-gray-300 text-gray-700 hover:bg-gray-50'
+                              ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 shadow-md'
+                              : 'border-border hover:border-border-hover text-text-body hover:bg-card-hover'
                           }`}
                         >
                           <div className="flex items-start gap-3">
@@ -750,10 +750,10 @@ const FileConverterPage = () => {
 
               {/* Advanced Settings Panel */}
               {showSettings && file && (
-                <div className="bg-gradient-to-br from-gray-50 to-blue-50 rounded-2xl p-6 space-y-4 border border-blue-100">
+                <div className="bg-gradient-to-br from-gray-50 to-blue-50 dark:from-gray-800 dark:to-blue-900/20 rounded-2xl p-6 space-y-4 border border-blue-100 dark:border-blue-800">
                   <div className="flex items-center gap-2 mb-4">
                     <Settings className="w-5 h-5 text-blue-600" />
-                    <h3 className="font-semibold text-gray-900">Advanced Settings</h3>
+                    <h3 className="font-semibold text-text-heading">Advanced Settings</h3>
                   </div>
                   
                   <div className="space-y-4">
@@ -817,7 +817,7 @@ const FileConverterPage = () => {
                       </div>
                     )}
 
-                    <div className="pt-3 border-t border-gray-200">
+                    <div className="pt-3 border-t border-gray-200 dark:border-gray-700">
                       <button
                         type="button"
                         onClick={() => setConversionSettings({
@@ -839,10 +839,10 @@ const FileConverterPage = () => {
               {isConverting && (
                 <div className="space-y-2">
                   <div className="flex items-center justify-between text-sm">
-                    <span className="text-gray-600">Converting...</span>
+                    <span className="text-text-body">Converting...</span>
                     <span className="text-blue-600 font-medium">{conversionProgress}%</span>
                   </div>
-                  <div className="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
+                  <div className="w-full h-2 bg-secondary-button rounded-full overflow-hidden">
                     <div 
                       className="h-full bg-gradient-to-r from-blue-500 to-purple-500 transition-all duration-300"
                       style={{ width: `${conversionProgress}%` }}
@@ -875,7 +875,7 @@ const FileConverterPage = () => {
                   <button
                     type="button"
                     onClick={resetConverter}
-                    className="px-6 py-4 bg-gray-100 text-gray-700 font-semibold rounded-2xl hover:bg-gray-200 transition-colors"
+                    className="px-6 py-4 bg-secondary-button text-text-body font-semibold rounded-2xl hover:bg-opacity-80 transition-colors"
                   >
                     <RefreshCw className="w-5 h-5" />
                   </button>
@@ -885,10 +885,10 @@ const FileConverterPage = () => {
           </div>
 
           {/* Results Section */}
-          <div className="bg-white rounded-3xl p-8 shadow-xl border border-gray-100">
+          <div className="bg-card-background rounded-3xl p-8 shadow-xl border border-border">
             <div className="flex items-center gap-2 mb-6">
               <Eye className="w-5 h-5 text-purple-600" />
-              <h2 className="text-2xl font-bold text-gray-900">Conversion Result</h2>
+              <h2 className="text-2xl font-bold text-text-heading">Conversion Result</h2>
             </div>
             
             {outputMessage ? (
@@ -961,11 +961,11 @@ const FileConverterPage = () => {
               </div>
             ) : (
               <div className="flex flex-col items-center justify-center py-16 text-center">
-                <div className="w-24 h-24 bg-gradient-to-br from-gray-100 to-purple-100 rounded-2xl flex items-center justify-center mb-4">
-                  <File className="w-12 h-12 text-gray-400" />
+                <div className="w-24 h-24 bg-gradient-to-br from-gray-100 to-purple-100 dark:from-gray-800 dark:to-purple-900/20 rounded-2xl flex items-center justify-center mb-4">
+                  <File className="w-12 h-12 text-text-muted" />
                 </div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-2">No File Converted Yet</h3>
-                <p className="text-gray-500 max-w-sm">Upload a file and select conversion format to get started</p>
+                <h3 className="text-xl font-semibold text-text-heading mb-2">No File Converted Yet</h3>
+                <p className="text-text-muted max-w-sm">Upload a file and select conversion format to get started</p>
               </div>
             )}
           </div>
@@ -973,26 +973,26 @@ const FileConverterPage = () => {
 
         {/* Conversion History */}
         {conversionHistory.length > 0 && (
-          <div className="mt-8 bg-white rounded-3xl p-8 shadow-xl border border-gray-100">
-            <h3 className="text-xl font-bold text-gray-900 mb-6 flex items-center gap-2">
+          <div className="mt-8 bg-card-background rounded-3xl p-8 shadow-xl border border-border">
+            <h3 className="text-xl font-bold text-text-heading mb-6 flex items-center gap-2">
               <Info className="w-5 h-5 text-blue-600" />
               Recent Conversions
             </h3>
             <div className="space-y-3">
               {conversionHistory.map((item, index) => (
-                <div key={index} className="flex items-center justify-between p-4 bg-gradient-to-r from-gray-50 to-blue-50 rounded-xl border border-gray-100">
+                <div key={index} className="flex items-center justify-between p-4 bg-gradient-to-r from-gray-50 to-blue-50 dark:from-gray-800 dark:to-blue-900/20 rounded-xl border border-border">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+                    <div className="w-10 h-10 bg-blue-100 dark:bg-blue-900/40 rounded-lg flex items-center justify-center">
                       <FileText className="w-5 h-5 text-blue-600" />
                     </div>
                     <div>
-                      <p className="font-medium text-gray-900 text-sm truncate max-w-xs">{item.fileName}</p>
-                      <p className="text-xs text-gray-500">{item.timestamp}</p>
+                      <p className="font-medium text-text-heading text-sm truncate max-w-xs">{item.fileName}</p>
+                      <p className="text-xs text-text-muted">{item.timestamp}</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-2 text-sm">
-                    <span className="px-3 py-1 bg-white rounded-lg text-gray-600 font-medium">{item.to.toUpperCase()}</span>
-                    <span className="text-gray-400">{item.size}</span>
+                    <span className="px-3 py-1 bg-card-background rounded-lg text-text-body font-medium">{item.to.toUpperCase()}</span>
+                    <span className="text-text-muted">{item.size}</span>
                   </div>
                 </div>
               ))}
@@ -1001,36 +1001,36 @@ const FileConverterPage = () => {
         )}
 
         {/* Supported Formats Info */}
-        <div className="mt-8 bg-white rounded-3xl p-8 shadow-xl border border-gray-100">
-          <h3 className="text-2xl font-bold text-gray-900 mb-6 text-center">Supported Formats</h3>
+        <div className="mt-8 bg-card-background rounded-3xl p-8 shadow-xl border border-border">
+          <h3 className="text-2xl font-bold text-text-heading mb-6 text-center">Supported Formats</h3>
           <div className="grid md:grid-cols-4 gap-6">
             <div className="text-center">
               <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center mx-auto mb-3">
                 <ImageIcon className="w-6 h-6 text-blue-600" />
               </div>
-              <h4 className="font-semibold text-gray-900 mb-2">Images</h4>
-              <p className="text-sm text-gray-600">PNG, JPG, JPEG, WebP, BMP, GIF, PDF</p>
+              <h4 className="font-semibold text-text-heading mb-2">Images</h4>
+              <p className="text-sm text-text-body">PNG, JPG, JPEG, WebP, BMP, GIF, PDF</p>
             </div>
             <div className="text-center">
-              <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center mx-auto mb-3">
+              <div className="w-12 h-12 bg-green-100 dark:bg-green-900/40 rounded-xl flex items-center justify-center mx-auto mb-3">
                 <FileText className="w-6 h-6 text-green-600" />
               </div>
-              <h4 className="font-semibold text-gray-900 mb-2">Documents</h4>
-              <p className="text-sm text-gray-600">PDF, DOCX, TXT, HTML</p>
+              <h4 className="font-semibold text-text-heading mb-2">Documents</h4>
+              <p className="text-sm text-text-body">PDF, DOCX, TXT, HTML</p>
             </div>
             <div className="text-center">
-              <div className="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center mx-auto mb-3">
+              <div className="w-12 h-12 bg-purple-100 dark:bg-purple-900/40 rounded-xl flex items-center justify-center mx-auto mb-3">
                 <FileSpreadsheet className="w-6 h-6 text-purple-600" />
               </div>
-              <h4 className="font-semibold text-gray-900 mb-2">Spreadsheets</h4>
-              <p className="text-sm text-gray-600">CSV, JSON, XLSX, HTML</p>
+              <h4 className="font-semibold text-text-heading mb-2">Spreadsheets</h4>
+              <p className="text-sm text-text-body">CSV, JSON, XLSX, HTML</p>
             </div>
             <div className="text-center">
-              <div className="w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center mx-auto mb-3">
+              <div className="w-12 h-12 bg-orange-100 dark:bg-orange-900/40 rounded-xl flex items-center justify-center mx-auto mb-3">
                 <File className="w-6 h-6 text-orange-600" />
               </div>
-              <h4 className="font-semibold text-gray-900 mb-2">Text Files</h4>
-              <p className="text-sm text-gray-600">TXT, CSV, JSON, HTML, PDF</p>
+              <h4 className="font-semibold text-text-heading mb-2">Text Files</h4>
+              <p className="text-sm text-text-body">TXT, CSV, JSON, HTML, PDF</p>
             </div>
           </div>
         </div>
