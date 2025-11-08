@@ -3,7 +3,7 @@ import { useToast } from '../contexts/ToastContext';
 import { Tldraw } from 'tldraw';
 import * as pdfjsLib from 'pdfjs-dist';
 import { PDFDocument, rgb } from 'pdf-lib';
-import { Upload, FileText, Save, Download, Trash2 } from 'lucide-react';
+import { Upload, FileText, Save, Download, Trash2, FileDown } from 'lucide-react';
 import 'tldraw/tldraw.css';
 
 // Set worker source - using jsdelivr CDN with proper CORS headers
@@ -28,7 +28,6 @@ const PDFEditorControls = ({ editor, onFileLoaded, toast }) => {
 
     // Validate file type
     if (file.type !== 'application/pdf') {
-      console.error('Please select a valid PDF file');
       toast.error('Please select a valid PDF file');
       return;
     }
@@ -46,13 +45,15 @@ const PDFEditorControls = ({ editor, onFileLoaded, toast }) => {
       // Load PDF document with better error handling
       const loadingTask = pdfjsLib.getDocument({ 
         data: arrayBuffer,
-        verbosity: 0 // Reduce console spam
+        verbosity: 0, // Reduce console spam
+        cMapUrl: 'https://cdn.jsdelivr.net/npm/pdfjs-dist@4.9.155/cmaps/',
+        cMapPacked: true,
       });
       
       const pdf = await loadingTask.promise;
       
       const numPages = pdf.numPages;
-      const scale = 2.0; // Scale for better quality
+      const scale = 1.5; // Scale for better quality (reduced from 2.0 for performance)
       
       let currentY = 0;
 
@@ -63,7 +64,7 @@ const PDFEditorControls = ({ editor, onFileLoaded, toast }) => {
 
         // Create in-memory canvas
         const canvas = document.createElement('canvas');
-        const context = canvas.getContext('2d');
+        const context = canvas.getContext('2d', { willReadFrequently: false });
         canvas.height = viewport.height;
         canvas.width = viewport.width;
 
@@ -76,7 +77,7 @@ const PDFEditorControls = ({ editor, onFileLoaded, toast }) => {
         await page.render(renderContext).promise;
 
         // Get dataURL from canvas
-        const dataUrl = canvas.toDataURL('image/png');
+        const dataUrl = canvas.toDataURL('image/png', 0.9); // Add compression quality
 
         // Create a unique asset ID
         const assetId = `asset:${Date.now()}_${pageNum}`;
@@ -100,7 +101,7 @@ const PDFEditorControls = ({ editor, onFileLoaded, toast }) => {
         // Create image shape on tldraw canvas with the asset
         editor.createShape({
           type: 'image',
-          x: 0,
+          x: 50, // Add some padding from left
           y: currentY,
           props: {
             w: viewport.width,
@@ -112,54 +113,6 @@ const PDFEditorControls = ({ editor, onFileLoaded, toast }) => {
           },
         });
 
-        // Note: Text extraction is currently disabled due to tldraw v4 API changes
-        // The PDF pages will render as images which can be annotated
-        
-        /*
-        // Get text content from the page
-        const textContent = await page.getTextContent();
-        
-        // Transform PDF coordinates to canvas coordinates
-        const transform = viewport.transform;
-        
-        // Create text shapes for each text item
-        textContent.items.forEach((item) => {
-          // Transform coordinates from PDF space to canvas space
-          const tx = item.transform;
-          
-          // PDF uses bottom-left origin, convert to top-left origin
-          const canvasX = tx[4];
-          const canvasY = viewport.height - tx[5]; // Invert Y coordinate
-          
-          // Extract properties
-          const str = item.str;
-          const fontSize = Math.hypot(tx[0], tx[1]);
-          const width = (item.width || 0) * (fontSize || 16);
-          const height = fontSize * 1.2;
-
-          // Create text shape on tldraw canvas
-          editor.createShape({
-            type: 'text',
-            x: canvasX,
-            y: currentY + canvasY, // Add currentY offset for vertical stacking
-            props: {
-              text: str,
-              color: 'black',
-              size: 'm',
-            },
-            meta: {
-              isOriginalText: true,
-              pageNumber: pageNum,
-              originalX: tx[4],
-              originalY: tx[5],
-              originalWidth: width,
-              originalHeight: height,
-              originalFontSize: fontSize,
-            },
-          });
-        });
-        */
-
         // Position next page vertically below
         currentY += viewport.height + 50; // Add some spacing between pages
       }
@@ -170,86 +123,52 @@ const PDFEditorControls = ({ editor, onFileLoaded, toast }) => {
       // Notify parent that file is loaded AFTER successful rendering
       onFileLoaded(true);
       
-      console.log('PDF loaded successfully:', numPages, 'pages');
       toast.success(`PDF loaded successfully: ${numPages} page(s)`);
     } catch (error) {
       console.error('Error loading PDF:', error);
-      toast.error('Failed to load PDF. Please make sure it is a valid PDF file and try again.');
+      
+      // More specific error messages
+      let errorMessage = 'Failed to load PDF. ';
+      if (error.message?.includes('Invalid PDF')) {
+        errorMessage += 'The file appears to be corrupted or invalid.';
+      } else if (error.message?.includes('password')) {
+        errorMessage += 'Password-protected PDFs are not supported.';
+      } else {
+        errorMessage += 'Please make sure it is a valid PDF file and try again.';
+      }
+      
+      toast.error(errorMessage);
+      
       // Reset state if loading failed
       onFileLoaded(false);
       originalPdfFileRef.current = null;
+      
+      // Reset file input
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
     }
   };
 
   const handleSavePdf = async () => {
     if (!originalPdfFileRef.current || !editor) {
-      console.error('No PDF file or editor available');
+      toast.error('No PDF file or editor available');
       return;
     }
 
     try {
+      toast.info('Preparing PDF for download...');
+      
       // Load original PDF using pdf-lib
       const arrayBuffer = await originalPdfFileRef.current.arrayBuffer();
       const pdfDoc = await PDFDocument.load(arrayBuffer);
+      
+      // For now, we'll save the original PDF with any annotations
+      // In the future, we can add logic to embed tldraw annotations
+      
       const pages = pdfDoc.getPages();
-
-      // Get all shapes from tldraw editor once
-      const allShapes = editor.getShapes();
-
-      // Note: Text editing is currently disabled due to tldraw v4 API changes
-      // For now, we'll just save the original PDF
-      // You can add annotations using tldraw's drawing tools, but text extraction
-      // and editing is not yet supported
-
-      /* 
-      // Loop through each page in the PDF
-      pages.forEach((page, index) => {
-        const pageNumber = index + 1;
-        
-        // Filter shapes that belong to this specific page
-        const shapesForThisPage = allShapes.filter(
-          shape => shape.meta?.pageNumber === pageNumber
-        );
-
-        // Get page height for coordinate conversion
-        const pageHeight = page.getHeight();
-
-        // Loop through all shapes for this page
-        shapesForThisPage.forEach((shape) => {
-          // Check if this is an original text shape
-          if (shape.meta?.isOriginalText) {
-            const meta = shape.meta;
-
-            // Convert coordinates from top-left (tldraw) to bottom-left (pdf-lib)
-            const pdfY = pageHeight - meta.originalY - meta.originalHeight;
-
-            // Draw white rectangle to "erase" the original text
-            page.drawRectangle({
-              x: meta.originalX,
-              y: pdfY,
-              width: meta.originalWidth,
-              height: meta.originalHeight,
-              color: rgb(1, 1, 1), // White
-            });
-
-            // Draw the new text at the updated position
-            const currentText = shape.props?.text || '';
-            
-            // Get the current shape position from tldraw
-            const currentY = pageHeight - shape.y - meta.originalHeight;
-
-            // Draw the text with updated content at new position
-            page.drawText(currentText, {
-              x: shape.x,
-              y: currentY,
-              size: meta.originalFontSize,
-            });
-          }
-        });
-      });
-      */
-
-      // Save the modified PDF
+      
+      // Save the PDF
       const pdfBytes = await pdfDoc.save();
 
       // Trigger download
@@ -257,17 +176,59 @@ const PDFEditorControls = ({ editor, onFileLoaded, toast }) => {
       const url = URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.href = url;
-      link.download = 'edited.pdf';
+      
+      // Use original filename with "_edited" suffix
+      const originalName = originalPdfFileRef.current.name;
+      const nameWithoutExt = originalName.replace(/\.pdf$/i, '');
+      link.download = `${nameWithoutExt}_edited.pdf`;
+      
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
       URL.revokeObjectURL(url);
 
-      console.log('PDF saved successfully:', pages.length, 'pages');
       toast.success(`PDF saved successfully: ${pages.length} page(s)`);
     } catch (error) {
       console.error('Error saving PDF:', error);
       toast.error('Failed to save PDF. Please try again.');
+    }
+  };
+
+  const handleExportWithAnnotations = async () => {
+    if (!editor) {
+      toast.error('Editor not ready');
+      return;
+    }
+
+    try {
+      toast.info('Exporting canvas with annotations...');
+      
+      // Export the current canvas as SVG
+      const svg = await editor.getSvg(editor.getCurrentPageShapeIds());
+      
+      if (!svg) {
+        toast.error('Failed to export canvas');
+        return;
+      }
+
+      // Convert SVG to data URL
+      const svgString = new XMLSerializer().serializeToString(svg);
+      const svgBlob = new Blob([svgString], { type: 'image/svg+xml;charset=utf-8' });
+      const url = URL.createObjectURL(svgBlob);
+      
+      // Create download link
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = 'pdf_with_annotations.svg';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+
+      toast.success('Canvas exported successfully as SVG');
+    } catch (error) {
+      console.error('Error exporting canvas:', error);
+      toast.error('Failed to export canvas. Please try again.');
     }
   };
 
@@ -308,26 +269,39 @@ const PDFEditorControls = ({ editor, onFileLoaded, toast }) => {
           accept=".pdf"
           onChange={handleFileChange}
           style={{ display: 'none' }}
+          id="pdf-file-input"
         />
         <button
           onClick={() => fileInputRef.current?.click()}
           disabled={!editor}
-          className={`flex items-center gap-2 px-4 py-2.5 text-white border-0 rounded-lg font-semibold text-sm shadow transition-all ${
+          className={`flex items-center gap-2 px-4 py-2.5 text-white border-0 rounded-lg font-semibold text-sm shadow-lg transition-all ${
             editor
-              ? 'bg-success cursor-pointer hover:opacity-90'
-              : 'bg-gray-400 cursor-not-allowed opacity-50'
+              ? 'bg-success cursor-pointer hover:opacity-90 hover:shadow-xl'
+              : 'bg-text-muted cursor-not-allowed opacity-50'
           }`}
         >
           <Upload size={16} />
           Upload PDF
         </button>
         <button
+          onClick={handleExportWithAnnotations}
+          disabled={!editor || !originalPdfFileRef.current}
+          className={`flex items-center gap-2 px-4 py-2.5 text-white border-0 rounded-lg font-semibold text-sm shadow-lg transition-all ${
+            editor && originalPdfFileRef.current
+              ? 'bg-secondary-accent cursor-pointer hover:opacity-90 hover:shadow-xl'
+              : 'bg-text-muted cursor-not-allowed opacity-50'
+          }`}
+        >
+          <FileDown size={16} />
+          Export SVG
+        </button>
+        <button
           onClick={handleClearCanvas}
           disabled={!editor || !originalPdfFileRef.current}
-          className={`flex items-center gap-2 px-4 py-2.5 text-white border-0 rounded-lg font-semibold text-sm shadow transition-all ${
+          className={`flex items-center gap-2 px-4 py-2.5 text-white border-0 rounded-lg font-semibold text-sm shadow-lg transition-all ${
             editor && originalPdfFileRef.current
-              ? 'bg-danger cursor-pointer hover:opacity-90'
-              : 'bg-gray-400 cursor-not-allowed opacity-50'
+              ? 'bg-error cursor-pointer hover:opacity-90 hover:shadow-xl'
+              : 'bg-text-muted cursor-not-allowed opacity-50'
           }`}
         >
           <Trash2 size={16} />
@@ -336,10 +310,10 @@ const PDFEditorControls = ({ editor, onFileLoaded, toast }) => {
         <button
           onClick={handleSavePdf}
           disabled={!originalPdfFileRef.current}
-          className={`flex items-center gap-2 px-4 py-2.5 text-white border-0 rounded-lg font-semibold text-sm shadow transition-all ${
+          className={`flex items-center gap-2 px-4 py-2.5 text-white border-0 rounded-lg font-semibold text-sm shadow-lg transition-all ${
             originalPdfFileRef.current 
-              ? 'bg-primary-accent cursor-pointer hover:opacity-90' 
-              : 'bg-gray-400 cursor-not-allowed opacity-50'
+              ? 'bg-primary-accent cursor-pointer hover:opacity-90 hover:shadow-xl' 
+              : 'bg-text-muted cursor-not-allowed opacity-50'
           }`}
         >
           <Download size={16} />
