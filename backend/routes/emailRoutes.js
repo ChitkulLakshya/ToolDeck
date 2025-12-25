@@ -202,7 +202,7 @@ router.post('/send', upload.fields([
           const file = req.files[attachmentKey][0];
           attachments.push({
             filename: file.originalname,
-            content: file.buffer // Use buffer content instead of path
+            content: file.buffer
           });
         }
       }
@@ -225,7 +225,6 @@ router.post('/send', upload.fields([
       
       recipients = await new Promise((resolve, reject) => {
         const results = [];
-        // Create readable stream from buffer
         Readable.from(csvFile.buffer)
           .pipe(csv())
           .on('data', (data) => {
@@ -239,7 +238,35 @@ router.post('/send', upload.fields([
           .on('end', () => resolve(results))
           .on('error', reject);
       });
-    }   };
+    }
+
+    // Configure Transporter
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: emailUser,
+        pass: emailPass
+      }
+    });
+
+    let successCount = 0;
+    let failCount = 0;
+
+    for (const recipient of recipients) {
+      try {
+        // Personalize body
+        let personalizedBody = body;
+        if (recipient.name) {
+          personalizedBody = personalizedBody.replace('[Name]', recipient.name);
+        }
+
+        const mailOptions = {
+          from: `"${senderName}" <${emailUser}>`,
+          to: recipient.email,
+          subject: subject,
+          text: personalizedBody,
+          attachments: attachments
+        };
 
         await transporter.sendMail(mailOptions);
         successCount++;
@@ -252,30 +279,6 @@ router.post('/send', upload.fields([
       }
     }
 
-    // Clean up uploaded files
-    if (req.files) {
-      Object.values(req.files).flat().forEach(file => {
-        if (fs.existsSync(file.path)) {
-          fs.unlinkSync(file.path);
-        }
-      });
-    }
-
-    res.json({
-      success: true,
-      message: `Successfully sent ${successCount} email(s)${failCount > 0 ? `, ${failCount} failed` : ''}`,
-      successCount,
-    // Clean up uploaded files - No longer needed with memory storage
-    /* 
-    if (req.files) {
-      Object.values(req.files).flat().forEach(file => {
-        if (fs.existsSync(file.path)) {
-          fs.unlinkSync(file.path);
-        }
-      });
-    }
-    */
-
     res.json({
       success: true,
       message: `Successfully sent ${successCount} email(s)${failCount > 0 ? `, ${failCount} failed` : ''}`,
@@ -285,17 +288,6 @@ router.post('/send', upload.fields([
 
   } catch (error) {
     console.error("Email sending error:", error);
-    
-    // Clean up uploaded files on error - No longer needed
-    /*
-    if (req.files) {
-      Object.values(req.files).flat().forEach(file => {
-        if (fs.existsSync(file.path)) {
-          fs.unlinkSync(file.path);
-        }
-      });
-    }
-    */
     
     res.status(500).json({ 
       error: "Failed to send email",
