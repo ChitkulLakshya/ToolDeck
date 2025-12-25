@@ -180,15 +180,6 @@ router.post('/send', upload.fields([
       if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
         console.warn("Email credentials not configured");
         
-        // Clean up uploaded files
-        if (req.files) {
-          Object.values(req.files).flat().forEach(file => {
-            if (fs.existsSync(file.path)) {
-    } else {
-      // Use server's configured email
-      if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
-        console.warn("Email credentials not configured");
-        
         // Return mock success
         return res.json({
           success: true,
@@ -200,22 +191,8 @@ router.post('/send', upload.fields([
       emailUser = process.env.EMAIL_USER;
       emailPass = process.env.EMAIL_PASS;
       console.log(`Using server's email account: ${emailUser}`);
-    });
-
-    // Prepare attachments
-    const attachments = [];
-    if (req.files) {
-      for (let i = 0; i < 5; i++) {
-        const attachmentKey = `attachment${i}`;
-        if (req.files[attachmentKey]) {
-          const file = req.files[attachmentKey][0];
-          attachments.push({
-            filename: file.originalname,
-            path: file.path
-          });
-        }
-      }
     }
+
     // Prepare attachments
     const attachments = [];
     if (req.files) {
