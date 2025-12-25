@@ -2,7 +2,7 @@ import React, { useState, useRef } from "react";
 import { generateEmail, sendEmail } from "../api/api";
 import { useToast } from "../contexts/ToastContext";
 import { InlineLoader } from "../components/LoadingSpinner";
-import { Mail, Upload, Send, RefreshCw, Eye, Image as ImageIcon, FileText, Copy, Users, FileUp } from "lucide-react";
+import { Mail, Upload, Send, RefreshCw, Eye, Image as ImageIcon, FileText, Copy, Users, FileUp, Wand2, Sparkles, CheckCircle, AlertCircle, Zap } from "lucide-react";
 
 const EmailPage = () => {
   const toast = useToast();

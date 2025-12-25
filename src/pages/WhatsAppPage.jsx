@@ -1,6 +1,6 @@
 import React, { useState, useRef } from "react";
 import { useToast } from "../contexts/ToastContext";
-import { MessageSquare, Send, Clock, Phone, Eye, RefreshCw, Globe, Users, Copy, Info } from "lucide-react";
+import { MessageSquare, Send, Clock, Phone, Eye, RefreshCw, Globe, Users, Copy, Info, Sparkles, CheckCircle, AlertCircle } from "lucide-react";
 
 const WhatsappPage = () => {
   const toast = useToast();
