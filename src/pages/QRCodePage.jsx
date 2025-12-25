@@ -1,7 +1,7 @@
 import React, { useState, useRef } from "react";
 import { useToast } from "../contexts/ToastContext";
 import { QRCodeCanvas } from "qrcode.react";
-import { Download, Copy, RefreshCw, Settings, Palette, Eye, Share2, Printer, Link as LinkIcon, Mail, Phone, MapPin, Wifi } from "lucide-react";
+import { Download, Copy, RefreshCw, Settings, Palette, Eye, Share2, Printer, Link as LinkIcon, Mail, Phone, MapPin, Wifi, Sparkles, CheckCircle } from "lucide-react";
 
 const QRCodePage = () => {
   const [qrPreview, setQrPreview] = useState("");
