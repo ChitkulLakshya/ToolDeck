@@ -8,25 +8,7 @@ import jsPDF from "jspdf";
 import mammoth from "mammoth";
 import imageCompression from "browser-image-compression";
 import * as XLSX from "xlsx";
-import { 
-  Upload, 
-  Download, 
-  FileText, 
-  Image as ImageIcon, 
-  File, 
-  RefreshCw, 
-  CheckCircle, 
-  AlertCircle,
-  Settings,
-  Zap,
-  FileImage,
-  FileSpreadsheet,
-  Loader2,
-  X,
-  Eye,
-  Sparkles,
-  Info
-} from "lucide-react";
+import { Upload, Download, FileText, Image as ImageIcon, File, RefreshCw, Settings, FileImage, FileSpreadsheet, Loader2, X, Eye, Info } from "lucide-react";
 
 const FileConverterPage = () => {
   const toast = useToast();

@@ -2,23 +2,7 @@ import React, { useState, useRef } from "react";
 import { generateEmail, sendEmail } from "../api/api";
 import { useToast } from "../contexts/ToastContext";
 import { InlineLoader } from "../components/LoadingSpinner";
-import { 
-  Mail, 
-  Upload, 
-  Sparkles, 
-  Send, 
-  RefreshCw, 
-  Eye, 
-  Image as ImageIcon,
-  FileText,
-  CheckCircle,
-  AlertCircle,
-  Copy,
-  Users,
-  FileUp,
-  Zap,
-  Wand2
-} from "lucide-react";
+import { Mail, Upload, Send, RefreshCw, Eye, Image as ImageIcon, FileText, Copy, Users, FileUp } from "lucide-react";
 
 const EmailPage = () => {
   const toast = useToast();
@@ -32,11 +16,11 @@ const EmailPage = () => {
   const [csvFile, setCsvFile] = useState(null);
   const [senderEmail, setSenderEmail] = useState("");
   const [senderName, setSenderName] = useState("");
-  const [senderPassword, setSenderPassword] = useState(""); // User's email password
-  const [useOwnAccount, setUseOwnAccount] = useState(false); // Toggle for using own email
+  const [senderPassword, setSenderPassword] = useState(""); 
+  const [useOwnAccount, setUseOwnAccount] = useState(false); 
   const [recipientEmail, setRecipientEmail] = useState("");
   const [attachments, setAttachments] = useState([]);
-  const [sendMode, setSendMode] = useState("single"); // single or bulk
+  const [sendMode, setSendMode] = useState("single"); 
   const fileInputRef = useRef(null);
   const csvInputRef = useRef(null);
   const attachmentInputRef = useRef(null);
