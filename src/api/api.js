@@ -150,6 +150,8 @@ export const sendEmail = async (data) => {
     // Send mode specific fields
     if (data.sendMode === 'single') {
       formData.append('recipientEmail', data.recipientEmail);
+      if (data.cc) formData.append('cc', data.cc);
+      if (data.bcc) formData.append('bcc', data.bcc);
     } else if (data.sendMode === 'bulk' && data.csvFile) {
       formData.append('csvFile', data.csvFile);
     }
