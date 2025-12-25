@@ -132,15 +132,15 @@ Return ONLY JSON: {"subject": "your subject here", "body": "your email body here
     console.error("Email generation error:", error);
     
     // Clean up uploaded file on error
-  } catch (error) {
-    console.error("Email generation error:", error);
-    
     res.status(500).json({ 
       error: "Failed to generate email",
       details: error.message 
     });
   }
-}); name: 'csvFile', maxCount: 1 },
+});
+
+router.post('/send', upload.fields([
+  { name: 'csvFile', maxCount: 1 },
   { name: 'attachment0', maxCount: 1 },
   { name: 'attachment1', maxCount: 1 },
   { name: 'attachment2', maxCount: 1 },
