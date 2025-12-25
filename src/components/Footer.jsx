@@ -70,29 +70,9 @@ const Footer = () => {
 
           {/* Connect */}
           <div>
-            <h3 className="text-lg font-semibold mb-4 text-text-heading">Connect</h3>
-            <div className="flex space-x-4 mb-4">
-              <a 
-                href="#" 
-                className="w-10 h-10 bg-card-background hover:bg-primary-accent border border-border rounded-lg flex items-center justify-center transition-colors duration-200 group"
-              >
-                <Github className="w-5 h-5 group-hover:scale-110 transition-transform" />
-              </a>
-              <a 
-                href="#" 
-                className="w-10 h-10 bg-card-background hover:bg-primary-accent border border-border rounded-lg flex items-center justify-center transition-colors duration-200 group"
-              >
-                <Twitter className="w-5 h-5 group-hover:scale-110 transition-transform" />
-              </a>
-              <a 
-                href="#" 
-                className="w-10 h-10 bg-card-background hover:bg-primary-accent border border-border rounded-lg flex items-center justify-center transition-colors duration-200 group"
-              >
-                <Mail className="w-5 h-5 group-hover:scale-110 transition-transform" />
-              </a>
-            </div>
+            <h3 className="text-lg font-semibold mb-4 text-text-heading">Internal Tool</h3>
             <p className="text-text-muted text-sm">
-              Follow us for updates and new tools
+              For support, contact the tech team on Slack.
             </p>
           </div>
         </div>

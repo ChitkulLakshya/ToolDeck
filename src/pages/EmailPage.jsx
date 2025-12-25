@@ -88,8 +88,15 @@ const EmailPage = () => {
 
   // Generate AI email using API utility
   const generateAIEmail = async () => {
-    if (!eventImage && !context) {
-      toast.warning("Please upload an event image or provide context");
+    // Validation: Ensure we have enough context for the AI
+    if (!context || context.trim().length < 10) {
+      toast.warning("Please provide at least 10 characters of context (e.g., Event Name, Date, Venue)");
+      return;
+    }
+
+    // Validation: If no image, context must be substantial
+    if (!eventImage && context.trim().length < 30) {
+      toast.warning("Without an image, please provide more details (30+ chars) for better results");
       return;
     }
 

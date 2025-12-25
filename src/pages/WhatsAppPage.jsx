@@ -111,7 +111,11 @@ const WhatsappPage = () => {
     setValidationErrors({});
     
     // Get form values
-    const fullPhone = `${countryCode}${phoneInput}`;
+    // Use state for phone input instead of form element to ensure we get the current value
+    // If countryCode is already in phoneInput, don't add it again
+    const cleanPhone = phoneInput.replace(/\D/g, '');
+    const fullPhone = phoneInput.startsWith('+') ? phoneInput : `${countryCode}${cleanPhone}`;
+    
     const message = e.target.whatsappMessage.value;
     const delay = e.target.messageDelay.value || 0;
 
@@ -286,11 +290,17 @@ const WhatsappPage = () => {
                   <input
                     type="tel"
                     name="phoneNumber"
+                    value={phoneInput}
                     className="w-full pl-12 pr-4 py-3 border-2 border-border bg-input-background text-text-heading rounded-xl focus:ring-2 focus:ring-primary-accent focus:border-primary-accent transition-all"
                     placeholder="+1234567890"
                     required
                     onChange={(e) => {
-                      e.target.value = formatPhoneNumber(e.target.value);
+                      // Only update state, do not force format on every keystroke to avoid cursor jumping
+                      setPhoneInput(e.target.value);
+                    }}
+                    onBlur={(e) => {
+                      // Format on blur (when user leaves the field)
+                      setPhoneInput(formatPhoneNumber(e.target.value));
                     }}
                   />
                 </div>

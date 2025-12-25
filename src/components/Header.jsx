@@ -34,8 +34,7 @@ const Header = () => {
   const navItems = [
     { label: "Home", action: () => handleScroll("home") },
     { label: "Tools", action: () => handleScroll("tools") },
-    { label: "About", to: "/about" },
-    { label: "Contact", to: "/contact" }
+    // Removed About/Contact for internal tool simplicity
   ];
 
   return (
