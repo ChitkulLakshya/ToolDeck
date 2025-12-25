@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { ArrowRight, Sparkles, Zap, Star, Users, Clock } from "lucide-react";
 import { scroller } from "react-scroll";
-import Aurora from "./Aurora";
 
 const HeroSection = () => {
   const [isVisible, setIsVisible] = useState(false);
@@ -26,15 +25,6 @@ const HeroSection = () => {
 
   return (
     <section id="home" className="relative pt-32 pb-20 bg-background text-text-body min-h-screen flex items-center overflow-hidden">
-      {/* Aurora Background */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-30">
-        <Aurora 
-          colorStops={['#3b82f6', '#2dd4bf', '#3b82f6']}
-          amplitude={1.2}
-          blend={1}
-          speed={0.8}
-        />
-      </div>
       
       {/* Gradient Overlay for better text readability */}
       <div className="absolute inset-0 bg-gradient-to-b from-background/50 via-background/30 to-background/50"></div>
