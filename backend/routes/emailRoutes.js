@@ -326,3 +326,4 @@ router.post('/send', upload.fields([
     });
   }
 });
+export default router;
