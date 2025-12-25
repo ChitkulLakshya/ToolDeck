@@ -19,6 +19,8 @@ const EmailPage = () => {
   const [senderPassword, setSenderPassword] = useState(""); 
   const [useOwnAccount, setUseOwnAccount] = useState(false); 
   const [recipientEmail, setRecipientEmail] = useState("");
+  const [ccEmail, setCcEmail] = useState("");
+  const [bccEmail, setBccEmail] = useState("");
   const [attachments, setAttachments] = useState([]);
   const [sendMode, setSendMode] = useState("single"); 
   const fileInputRef = useRef(null);
@@ -149,6 +151,8 @@ const EmailPage = () => {
         body: generatedEmail.body,
         sendMode,
         recipientEmail: sendMode === "single" ? recipientEmail : undefined,
+        cc: sendMode === "single" ? ccEmail : undefined,
+        bcc: sendMode === "single" ? bccEmail : undefined,
         csvFile: sendMode === "bulk" ? csvFile : undefined,
         attachments
       });
@@ -182,6 +186,9 @@ const EmailPage = () => {
     setGeneratedEmail({ subject: "", body: "" });
     setShowPreview(false);
     setCsvFile(null);
+    setRecipientEmail("");
+    setCcEmail("");
+    setBccEmail("");
     setAttachments([]);
     if (fileInputRef.current) fileInputRef.current.value = "";
     if (csvInputRef.current) csvInputRef.current.value = "";
@@ -189,414 +196,264 @@ const EmailPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background pt-24 pb-8 px-4 animate-fadeIn">
-      <div className="max-w-7xl mx-auto">
-        {/* Header */}
-        <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-primary-accent to-secondary-accent rounded-2xl mb-4 shadow-lg">
-            <Wand2 className="w-8 h-8 text-white" />
-          </div>
-          <h1 className="text-5xl font-extrabold bg-gradient-to-r from-primary-accent to-secondary-accent bg-clip-text text-transparent mb-4">
-            AI Email Generator
-          </h1>
-          <p className="text-text-body text-lg max-w-2xl mx-auto">
-            Upload your event banner, provide context, and let AI craft perfect professional emails instantly. Perfect for clubs, events, and organizations.
-          </p>
-        </div>
+    <div className="min-h-screen bg-background p-6 md:p-12">
+      <div className="max-w-6xl mx-auto">
+        <header className="mb-8">
+          <h1 className="text-3xl font-bold text-text-heading mb-2">AI Email Generator</h1>
+          <p className="text-text-body">Generate and send professional emails for your events.</p>
+        </header>
 
         <div className="grid lg:grid-cols-2 gap-8">
           {/* Input Section */}
-          <div className="bg-card-background rounded-3xl p-8 shadow-xl border border-border">
-            <div className="flex items-center gap-2 mb-6">
-              <Sparkles className="w-5 h-5 text-primary-accent" />
-              <h2 className="text-2xl font-bold text-text-heading">Generate Email</h2>
-            </div>
+          <div className="bg-card-background rounded-xl p-6 border border-border">
+            <h2 className="text-xl font-semibold text-text-heading mb-6">1. Configure & Generate</h2>
 
             <div className="space-y-6">
               {/* Sender Details */}
-              <div className="bg-background rounded-2xl p-6 border border-border">
-                <h3 className="font-semibold text-text-heading mb-4 flex items-center gap-2">
-                  <Mail className="w-4 h-4 text-primary-accent" />
-                  Sender Information
-                </h3>
-                <div className="space-y-4">
+              <div className="space-y-4">
+                <h3 className="font-medium text-text-heading">Sender Information</h3>
+                <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-text-body mb-2">Your Name</label>
+                    <label className="block text-sm text-text-body mb-1">Name</label>
                     <input
                       type="text"
                       value={senderName}
                       onChange={(e) => setSenderName(e.target.value)}
-                      className="w-full px-4 py-3 border-2 border-border rounded-xl focus:ring-2 focus:ring-primary-accent focus:border-primary-accent bg-background text-text-body"
+                      className="w-full px-3 py-2 border border-border rounded-lg bg-background text-text-body"
                       placeholder="John Doe"
-                      required
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-text-body mb-2">Your Email</label>
+                    <label className="block text-sm text-text-body mb-1">Email</label>
                     <input
                       type="email"
                       value={senderEmail}
                       onChange={(e) => setSenderEmail(e.target.value)}
-                      className="w-full px-4 py-3 border-2 border-border rounded-xl focus:ring-2 focus:ring-primary-accent focus:border-primary-accent bg-background text-text-body"
+                      className="w-full px-3 py-2 border border-border rounded-lg bg-background text-text-body"
                       placeholder="john@example.com"
-                      required
                     />
                   </div>
-                  
-                  {/* Toggle for using own email account */}
-                  <div className="flex items-center justify-between p-3 bg-card-background rounded-lg border border-border">
-                    <div className="flex items-center gap-2">
-                      <label className="text-sm font-medium text-text-body cursor-pointer" htmlFor="useOwnAccount">
-                        Send from my email account
-                      </label>
-                      <span className="text-xs text-text-muted">(Use your credentials)</span>
-                    </div>
-                    <button
-                      id="useOwnAccount"
-                      type="button"
-                      onClick={() => setUseOwnAccount(!useOwnAccount)}
-                      className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                        useOwnAccount ? 'bg-primary-accent' : 'bg-gray-300'
-                      }`}
-                    >
-                      <span
-                        className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                          useOwnAccount ? 'translate-x-6' : 'translate-x-1'
-                        }`}
-                      />
-                    </button>
-                  </div>
-
-                  {/* Show password field only if using own account */}
-                  {useOwnAccount && (
-                    <div className="space-y-3 p-4 bg-primary-accent/5 rounded-lg border border-primary-accent/20">
-                      <div>
-                        <label className="block text-sm font-medium text-text-body mb-2">
-                          Email Password / App Password
-                        </label>
-                        <input
-                          type="password"
-                          value={senderPassword}
-                          onChange={(e) => setSenderPassword(e.target.value)}
-                          autoComplete="new-password"
-                          className="w-full px-4 py-3 border-2 border-border rounded-xl focus:ring-2 focus:ring-primary-accent focus:border-primary-accent bg-background text-text-body"
-                          placeholder="••••••••••••••••"
-                          required
-                        />
-                        <div className="mt-2 p-3 bg-yellow-500/10 border border-yellow-500/20 rounded-lg">
-                          <p className="text-xs text-yellow-600 dark:text-yellow-400 font-medium flex items-start gap-2">
-                            <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
-                            <span>
-                              <strong>Security Warning:</strong> Do NOT use your main Google password. 
-                              You must generate an <a href="https://myaccount.google.com/apppasswords" target="_blank" rel="noopener noreferrer" className="underline hover:text-yellow-500">App Password</a>.
-                            </span>
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  )}
                 </div>
+                
+                <div className="flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    id="useOwnAccount"
+                    checked={useOwnAccount}
+                    onChange={(e) => setUseOwnAccount(e.target.checked)}
+                    className="rounded border-border text-primary-accent focus:ring-primary-accent"
+                  />
+                  <label htmlFor="useOwnAccount" className="text-sm text-text-body">Send from my own account (requires App Password)</label>
+                </div>
+
+                {useOwnAccount && (
+                  <div>
+                    <label className="block text-sm text-text-body mb-1">App Password</label>
+                    <input
+                      type="password"
+                      value={senderPassword}
+                      onChange={(e) => setSenderPassword(e.target.value)}
+                      className="w-full px-3 py-2 border border-border rounded-lg bg-background text-text-body"
+                      placeholder="•••• •••• •••• ••••"
+                    />
+                    <p className="text-xs text-warning mt-1">Do not use your main password.</p>
+                  </div>
+                )}
               </div>
 
-              {/* Event Image Upload */}
-              <div>
-                <label className="block text-sm font-semibold text-text-body mb-3">
-                  Upload Event Banner (Optional)
-                </label>
-                <div
-                  onClick={() => fileInputRef.current?.click()}
-                  className="relative border-2 border-dashed border-border rounded-2xl p-8 text-center cursor-pointer hover:border-primary-accent transition-all bg-card-background"
-                >
+              <hr className="border-border" />
+
+              {/* Event Details */}
+              <div className="space-y-4">
+                <h3 className="font-medium text-text-heading">Event Details</h3>
+                
+                <div>
+                  <label className="block text-sm text-text-body mb-1">Event Banner (Optional)</label>
                   <input
                     ref={fileInputRef}
                     type="file"
                     accept="image/*"
                     onChange={handleImageUpload}
-                    className="hidden"
+                    className="block w-full text-sm text-text-muted file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-primary-accent/10 file:text-primary-accent hover:file:bg-primary-accent/20"
                   />
-                  
-                  {imagePreview ? (
-                    <div className="space-y-4">
-                      <img 
-                        src={imagePreview} 
-                        alt="Event banner" 
-                        className="max-h-48 mx-auto rounded-lg shadow-lg"
-                      />
-                      <div className="flex items-center justify-center gap-2 text-sm text-success">
-                        <CheckCircle className="w-4 h-4" />
-                        Image uploaded successfully
-                      </div>
-                    </div>
-                  ) : (
-                    <div className="space-y-4">
-                      <div className="w-16 h-16 bg-card-background border border-border rounded-2xl flex items-center justify-center mx-auto">
-                        <ImageIcon className="w-8 h-8 text-primary-accent" />
-                      </div>
-                      <div>
-                        <p className="text-lg font-medium text-text-heading">
-                          Drop event banner here or click to upload
-                        </p>
-                        <p className="text-sm text-text-muted mt-1">
-                          AI will analyze the image to understand your event
-                        </p>
-                      </div>
-                    </div>
-                  )}
+                </div>
+
+                <div>
+                  <label className="block text-sm text-text-body mb-1">Context / Prompt</label>
+                  <textarea
+                    value={context}
+                    onChange={(e) => setContext(e.target.value)}
+                    rows="4"
+                    className="w-full px-3 py-2 border border-border rounded-lg bg-background text-text-body resize-none"
+                    placeholder="Describe your event..."
+                  />
                 </div>
               </div>
 
-              {/* Context Input */}
-              <div>
-                <label className="block text-sm font-semibold text-text-body mb-3">
-                  Event Context / Purpose
-                </label>
-                <textarea
-                  value={context}
-                  onChange={(e) => setContext(e.target.value)}
-                  rows="4"
-                  className="w-full px-4 py-3 border-2 border-border rounded-xl focus:ring-2 focus:ring-primary-accent focus:border-primary-accent resize-none bg-background text-text-body"
-                  placeholder="Example: 'Tech club orientation event for freshers. Casual and welcoming tone. Include registration link and date.'"
-                  required
-                />
-                <p className="text-xs text-text-muted mt-2">
-                  💡 Tip: Be specific about tone, audience, and key details
-                </p>
-              </div>
-
-              {/* Generate Button */}
               <button
                 onClick={generateAIEmail}
                 disabled={isGenerating || (!eventImage && !context)}
-                className="w-full flex items-center justify-center gap-2 py-4 bg-gradient-to-r from-primary-accent to-secondary-accent text-white font-semibold rounded-2xl text-lg hover:opacity-90 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl"
+                className="w-full py-3 bg-primary-accent text-white font-medium rounded-lg hover:opacity-90 transition-opacity disabled:opacity-50 flex items-center justify-center gap-2"
               >
-                {isGenerating ? (
-                  <>
-                    <InlineLoader size="default" />
-                    Generating with AI...
-                  </>
-                ) : (
-                  <>
-                    <Wand2 className="w-5 h-5" />
-                    Generate Email with AI
-                  </>
-                )}
+                {isGenerating ? <InlineLoader /> : <Wand2 className="w-4 h-4" />}
+                Generate Email
               </button>
             </div>
           </div>
 
-          {/* Preview & Send Section */}
-          <div className="bg-card-background rounded-3xl p-8 shadow-xl border border-border">
-            <div className="flex items-center gap-2 mb-6">
-              <Eye className="w-5 h-5 text-secondary-accent" />
-              <h2 className="text-2xl font-bold text-text-heading">Email Preview & Send</h2>
-            </div>
+          {/* Preview Section */}
+          <div className="bg-card-background rounded-xl p-6 border border-border flex flex-col h-full">
+            <h2 className="text-xl font-semibold text-text-heading mb-6">2. Preview & Send</h2>
 
             {showPreview ? (
-              <div className="space-y-6">
-                {/* Generated Email Preview */}
-                <div className="bg-background rounded-2xl p-6 border border-border">
-                  <div className="space-y-4">
-                    {/* Subject */}
-                    <div>
-                      <div className="flex items-center justify-between mb-2">
-                        <label className="text-sm font-semibold text-text-body">Subject</label>
-                        <button
-                          onClick={() => copyToClipboard(generatedEmail.subject)}
-                          className="text-xs text-primary-accent hover:text-secondary-accent flex items-center gap-1"
-                        >
-                          <Copy className="w-3 h-3" />
-                          Copy
-                        </button>
-                      </div>
-                      <input
-                        type="text"
-                        value={generatedEmail.subject}
-                        onChange={(e) => setGeneratedEmail({...generatedEmail, subject: e.target.value})}
-                        className="w-full px-4 py-3 bg-card-background border-2 border-border rounded-xl focus:ring-2 focus:ring-primary-accent font-medium text-text-body"
-                      />
+              <div className="flex-1 flex flex-col space-y-6">
+                <div className="space-y-4 flex-1">
+                  <div className="flex justify-between items-center">
+                    <h3 className="font-medium text-text-heading text-sm">Draft Content</h3>
+                    <div className="flex gap-2">
+                      <button
+                        onClick={generateAIEmail}
+                        disabled={isGenerating}
+                        className="p-1.5 text-text-muted hover:text-primary-accent hover:bg-primary-accent/10 rounded transition-colors"
+                        title="Regenerate"
+                      >
+                        <RefreshCw className={`w-4 h-4 ${isGenerating ? 'animate-spin' : ''}`} />
+                      </button>
+                      <button
+                        onClick={() => copyToClipboard(`Subject: ${generatedEmail.subject}\n\n${generatedEmail.body}`)}
+                        className="p-1.5 text-text-muted hover:text-primary-accent hover:bg-primary-accent/10 rounded transition-colors"
+                        title="Copy to Clipboard"
+                      >
+                        <Copy className="w-4 h-4" />
+                      </button>
                     </div>
-
-                    {/* Body */}
-                    <div>
-                      <div className="flex items-center justify-between mb-2">
-                        <label className="text-sm font-semibold text-text-body">Email Body</label>
-                        <button
-                          onClick={() => copyToClipboard(generatedEmail.body)}
-                          className="text-xs text-primary-accent hover:text-secondary-accent flex items-center gap-1"
-                        >
-                          <Copy className="w-3 h-3" />
-                          Copy
-                        </button>
-                      </div>
-                      <textarea
-                        value={generatedEmail.body}
-                        onChange={(e) => setGeneratedEmail({...generatedEmail, body: e.target.value})}
-                        rows="12"
-                        className="w-full px-4 py-3 bg-card-background border-2 border-border rounded-xl focus:ring-2 focus:ring-primary-accent resize-none text-text-body"
-                      />
-                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-sm text-text-body mb-1">Subject</label>
+                    <input
+                      type="text"
+                      value={generatedEmail.subject}
+                      onChange={(e) => setGeneratedEmail({...generatedEmail, subject: e.target.value})}
+                      className="w-full px-3 py-2 border border-border rounded-lg bg-background text-text-body font-medium"
+                    />
+                  </div>
+                  <div className="flex-1">
+                    <label className="block text-sm text-text-body mb-1">Body</label>
+                    <textarea
+                      value={generatedEmail.body}
+                      onChange={(e) => setGeneratedEmail({...generatedEmail, body: e.target.value})}
+                      className="w-full h-64 px-3 py-2 border border-border rounded-lg bg-background text-text-body resize-none"
+                    />
                   </div>
                 </div>
 
-                {/* Send Mode Selection */}
-                <div className="bg-background rounded-2xl p-6 border border-border">
-                  <h3 className="font-semibold text-text-heading mb-4 flex items-center gap-2">
-                    <Send className="w-4 h-4 text-primary-accent" />
-                    Send Options
-                  </h3>
-                  
-                  {/* Mode Toggle */}
-                  <div className="grid grid-cols-2 gap-3 mb-4">
-                    <button
-                      onClick={() => setSendMode("single")}
-                      className={`flex items-center justify-center gap-2 px-4 py-3 rounded-xl font-medium transition-all ${
-                        sendMode === "single"
-                          ? 'bg-primary-accent text-white shadow-lg'
-                          : 'bg-card-background text-text-body border-2 border-border hover:border-primary-accent'
-                      }`}
-                    >
-                      <Mail className="w-4 h-4" />
-                      Single Send
-                    </button>
-                    <button
-                      onClick={() => setSendMode("bulk")}
-                      className={`flex items-center justify-center gap-2 px-4 py-3 rounded-xl font-medium transition-all ${
-                        sendMode === "bulk"
-                          ? 'bg-primary-accent text-white shadow-lg'
-                          : 'bg-card-background text-text-body border-2 border-border hover:border-primary-accent'
-                      }`}
-                    >
-                      <Users className="w-4 h-4" />
-                      Bulk Send
-                    </button>
+                <div className="space-y-4">
+                  <div className="flex gap-4">
+                    <label className="flex items-center gap-2 cursor-pointer">
+                      <input
+                        type="radio"
+                        name="sendMode"
+                        checked={sendMode === "single"}
+                        onChange={() => setSendMode("single")}
+                        className="text-primary-accent focus:ring-primary-accent"
+                      />
+                      <span className="text-sm text-text-body">Single Recipient</span>
+                    </label>
+                    <label className="flex items-center gap-2 cursor-pointer">
+                      <input
+                        type="radio"
+                        name="sendMode"
+                        checked={sendMode === "bulk"}
+                        onChange={() => setSendMode("bulk")}
+                        className="text-primary-accent focus:ring-primary-accent"
+                      />
+                      <span className="text-sm text-text-body">Bulk (CSV)</span>
+                    </label>
                   </div>
 
-                  {/* Recipient Input */}
                   {sendMode === "single" ? (
-                    <div>
-                      <label className="block text-sm font-medium text-text-body mb-2">Recipient Email</label>
-                      <input
-                        type="email"
-                        value={recipientEmail}
-                        onChange={(e) => setRecipientEmail(e.target.value)}
-                        className="w-full px-4 py-3 border-2 border-border rounded-xl focus:ring-2 focus:ring-primary-accent bg-card-background text-text-body"
-                        placeholder="recipient@example.com"
-                        required
-                      />
+                    <div className="space-y-3 p-4 bg-background rounded-lg border border-border">
+                      <h3 className="font-medium text-text-heading text-sm">Recipient Information</h3>
+                      <div>
+                        <label className="block text-sm text-text-body mb-1">To <span className="text-error">*</span></label>
+                        <input
+                          type="email"
+                          value={recipientEmail}
+                          onChange={(e) => setRecipientEmail(e.target.value)}
+                          className="w-full px-3 py-2 border border-border rounded-lg bg-background text-text-body"
+                          placeholder="recipient@example.com"
+                          required
+                        />
+                      </div>
+                      <div className="grid grid-cols-2 gap-4">
+                        <div>
+                          <label className="block text-sm text-text-body mb-1">CC</label>
+                          <input
+                            type="email"
+                            value={ccEmail}
+                            onChange={(e) => setCcEmail(e.target.value)}
+                            className="w-full px-3 py-2 border border-border rounded-lg bg-background text-text-body"
+                            placeholder="cc@example.com"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-sm text-text-body mb-1">BCC</label>
+                          <input
+                            type="email"
+                            value={bccEmail}
+                            onChange={(e) => setBccEmail(e.target.value)}
+                            className="w-full px-3 py-2 border border-border rounded-lg bg-background text-text-body"
+                            placeholder="bcc@example.com"
+                          />
+                        </div>
+                      </div>
                     </div>
                   ) : (
-                    <div>
-                      <label className="block text-sm font-medium text-text-body mb-2">Upload CSV File</label>
-                      <input
-                        ref={csvInputRef}
-                        type="file"
-                        accept=".csv"
-                        onChange={handleCsvUpload}
-                        className="w-full px-4 py-3 border-2 border-border rounded-xl focus:ring-2 focus:ring-primary-accent file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-primary-accent/10 file:text-primary-accent hover:file:bg-primary-accent/20 bg-card-background text-text-body"
-                      />
-                      <p className="text-xs text-text-muted mt-2">
-                        CSV format: email,name (one recipient per line)
-                      </p>
-                    </div>
+                    <input
+                      ref={csvInputRef}
+                      type="file"
+                      accept=".csv"
+                      onChange={handleCsvUpload}
+                      className="block w-full text-sm text-text-muted file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-primary-accent/10 file:text-primary-accent hover:file:bg-primary-accent/20"
+                    />
                   )}
-                </div>
 
-                {/* Attachments */}
-                <div>
-                  <label className="block text-sm font-semibold text-text-body mb-3">
-                    Attachments (Optional)
-                  </label>
-                  <input
-                    ref={attachmentInputRef}
-                    type="file"
-                    multiple
-                    onChange={handleAttachments}
-                    className="w-full px-4 py-3 border-2 border-border rounded-xl focus:ring-2 focus:ring-primary-accent file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-secondary-accent/10 file:text-secondary-accent hover:file:bg-secondary-accent/20 bg-card-background text-text-body"
-                  />
-                  {attachments.length > 0 && (
-                    <div className="mt-2 flex flex-wrap gap-2">
-                      {attachments.map((file, index) => (
-                        <div key={index} className="flex items-center gap-2 px-3 py-1 bg-card-background border border-border rounded-lg text-sm">
-                          <FileText className="w-4 h-4 text-text-muted" />
-                          <span className="text-text-body">{file.name}</span>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
+                  <div>
+                    <label className="block text-sm text-text-body mb-1">Attachments</label>
+                    <input
+                      ref={attachmentInputRef}
+                      type="file"
+                      multiple
+                      onChange={handleAttachments}
+                      className="block w-full text-sm text-text-muted file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-primary-accent/10 file:text-primary-accent hover:file:bg-primary-accent/20"
+                    />
+                  </div>
 
-                {/* Send Button */}
-                <div className="flex gap-3">
-                  <button
-                    onClick={sendEmailHandler}
-                    disabled={isSending}
-                    className="flex-1 flex items-center justify-center gap-2 py-4 bg-gradient-to-r from-success to-emerald-500 text-white font-semibold rounded-2xl text-lg hover:opacity-90 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl"
-                  >
-                    {isSending ? (
-                      <>
-                        <InlineLoader size="default" />
-                        Sending...
-                      </>
-                    ) : (
-                      <>
-                        <Send className="w-5 h-5" />
-                        Send Email
-                      </>
-                    )}
-                  </button>
-                  
-                  <button
-                    onClick={resetForm}
-                    className="px-6 py-4 bg-card-background text-text-body border border-border font-semibold rounded-2xl hover:bg-background transition-colors"
-                  >
-                    <RefreshCw className="w-5 h-5" />
-                  </button>
+                  <div className="flex gap-3 pt-4">
+                    <button
+                      onClick={sendEmailHandler}
+                      disabled={isSending || !generatedEmail.subject || !generatedEmail.body}
+                      className="flex-1 py-3 bg-success text-white font-medium rounded-lg hover:opacity-90 transition-opacity disabled:opacity-50 flex items-center justify-center gap-2"
+                    >
+                      {isSending ? <InlineLoader /> : <Send className="w-4 h-4" />}
+                      {isSending ? "Sending..." : "Send Email"}
+                    </button>
+                    <button
+                      onClick={resetForm}
+                      className="px-4 py-3 border border-border rounded-lg hover:bg-background transition-colors"
+                      title="Reset Form"
+                    >
+                      <RefreshCw className="w-4 h-4 text-text-body" />
+                    </button>
+                  </div>
                 </div>
               </div>
             ) : (
-              <div className="flex flex-col items-center justify-center py-16 text-center">
-                <div className="w-24 h-24 bg-card-background border border-border rounded-2xl flex items-center justify-center mb-4">
-                  <Mail className="w-12 h-12 text-primary-accent" />
-                </div>
-                <h3 className="text-xl font-semibold text-text-heading mb-2">No Email Generated</h3>
-                <p className="text-text-muted max-w-sm">Upload an event banner and provide context to generate your email</p>
+              <div className="flex-1 flex flex-col items-center justify-center text-text-muted">
+                <Mail className="w-12 h-12 mb-4 opacity-20" />
+                <p>Generated email preview will appear here</p>
               </div>
             )}
-          </div>
-        </div>
-
-        {/* Features Section */}
-        <div className="mt-12 bg-card-background rounded-3xl p-8 shadow-xl border border-border">
-          <h3 className="text-2xl font-bold text-text-heading mb-6 text-center">AI Email Features</h3>
-          <div className="grid md:grid-cols-4 gap-6">
-            <div className="text-center">
-              <div className="w-12 h-12 bg-primary-accent/10 border border-border rounded-xl flex items-center justify-center mx-auto mb-3">
-                <Wand2 className="w-6 h-6 text-primary-accent" />
-              </div>
-              <h4 className="font-semibold text-text-heading mb-2">AI-Powered</h4>
-              <p className="text-sm text-text-body">Advanced AI analyzes your event and generates perfect emails</p>
-            </div>
-            <div className="text-center">
-              <div className="w-12 h-12 bg-primary-accent/10 border border-border rounded-xl flex items-center justify-center mx-auto mb-3">
-                <Users className="w-6 h-6 text-primary-accent" />
-              </div>
-              <h4 className="font-semibold text-text-heading mb-2">Bulk Sending</h4>
-              <p className="text-sm text-text-body">Send to multiple recipients via CSV upload</p>
-            </div>
-            <div className="text-center">
-              <div className="w-12 h-12 bg-success/10 border border-border rounded-xl flex items-center justify-center mx-auto mb-3">
-                <Zap className="w-6 h-6 text-success" />
-              </div>
-              <h4 className="font-semibold text-text-heading mb-2">Instant Generation</h4>
-              <p className="text-sm text-text-body">Get professional emails in seconds</p>
-            </div>
-            <div className="text-center">
-              <div className="w-12 h-12 bg-secondary-accent/10 border border-border rounded-xl flex items-center justify-center mx-auto mb-3">
-                <FileUp className="w-6 h-6 text-secondary-accent" />
-              </div>
-              <h4 className="font-semibold text-text-heading mb-2">Attachments</h4>
-              <p className="text-sm text-text-body">Include PDFs, images, and other files</p>
-            </div>
           </div>
         </div>
       </div>
