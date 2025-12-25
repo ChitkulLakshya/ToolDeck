@@ -57,11 +57,6 @@ const PDFEditorControls = ({ editor, onFileLoaded, toast }) => {
       const scale = 1.5; // Scale for better quality (reduced from 2.0 for performance)
       
       let currentY = 0;
-
-      const numPages = pdf.numPages;
-      const scale = 1.5; // Scale for better quality (reduced from 2.0 for performance)
-      
-      let currentY = 0;
       
       // Progressive Loading Configuration
       const BATCH_SIZE = 3; // Number of pages to load initially

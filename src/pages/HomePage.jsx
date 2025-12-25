@@ -69,22 +69,16 @@ const HomePage = () => {
     };
   }, []);
 
-  // Generate random particles
-  useEffect(() => {
-    particlesRef.current = [...Array(30)].map((_, i) => ({
-      id: i,
-      x: Math.random() * 100,
-      y: Math.random() * 100,
-      size: Math.random() * 3 + 1,
-      delay: Math.random() * 20,
-      duration: 20 + Math.random() * 30,
-      icon: [Sparkles, Star, Zap][Math.floor(Math.random() * 3)],
-    }));
-  }, []);
-
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
+
+  return (
+    <div className="relative overflow-hidden bg-background">
+      {/* Hero Section */}
+      <div id="home">
+        <HeroSection />
+      </div>
 
   return (
     <div className="relative overflow-hidden bg-background">
