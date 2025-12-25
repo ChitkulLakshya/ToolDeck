@@ -5,22 +5,13 @@ import nodemailer from "nodemailer";
 import fs from "fs";
 import csv from "csv-parser";
 import path from "path";
+import { Readable } from "stream";
+import { aiGenerationLimiter } from "../middleware/rateLimiter.js";
 
 const router = express.Router();
 
-// Configure multer for file uploads
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    const uploadDir = "uploads/";
-    if (!fs.existsSync(uploadDir)) {
-      fs.mkdirSync(uploadDir, { recursive: true });
-    }
-    cb(null, uploadDir);
-  },
-  filename: (req, file, cb) => {
-    cb(null, Date.now() + "-" + file.originalname);
-  }
-});
+// Configure multer for memory storage (serverless friendly)
+const storage = multer.memoryStorage();
 
 const upload = multer({ 
   storage: storage,
@@ -30,24 +21,19 @@ const upload = multer({
 // Initialize Gemini AI
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "");
 
-// Email generation endpoint
-router.post("/generate", upload.single("eventImage"), async (req, res) => {
+// Email generation endpoint - Rate Limited
+router.post("/generate", aiGenerationLimiter, upload.single("eventImage"), async (req, res) => {
   try {
     const { context } = req.body;
-    const imagePath = req.file?.path;
+    const imageBuffer = req.file?.buffer;
 
-    if (!context && !imagePath) {
+    if (!context && !imageBuffer) {
       return res.status(400).json({ error: "Please provide context or image" });
     }
 
     // Check if API key is configured
     if (!process.env.GEMINI_API_KEY) {
       console.warn("GEMINI_API_KEY not configured, using mock response");
-      
-      // Clean up uploaded file
-      if (imagePath && fs.existsSync(imagePath)) {
-        fs.unlinkSync(imagePath);
-      }
       
       // Return mock response
       return res.json({
@@ -112,7 +98,11 @@ Return ONLY JSON: {"subject": "your subject here", "body": "your email body here
     if (imagePath) {
       // Read image and convert to base64
       const imageData = fs.readFileSync(imagePath);
-      const base64Image = imageData.toString('base64');
+    let result;
+    
+    if (imageBuffer) {
+      // Convert buffer to base64
+      const base64Image = imageBuffer.toString('base64');
       
       result = await model.generateContent([
         {
@@ -123,17 +113,9 @@ Return ONLY JSON: {"subject": "your subject here", "body": "your email body here
         },
         prompt
       ]);
-      
-      // Clean up uploaded file
-      fs.unlinkSync(imagePath);
     } else {
       result = await model.generateContent(prompt);
-    }
-
-    const responseText = result.response.text();
-    
-    // Extract JSON from response
-    const jsonMatch = responseText.match(/\{[\s\S]*\}/);
+    }onst jsonMatch = responseText.match(/\{[\s\S]*\}/);
     if (!jsonMatch) {
       throw new Error("Invalid AI response format");
     }
@@ -150,20 +132,15 @@ Return ONLY JSON: {"subject": "your subject here", "body": "your email body here
     console.error("Email generation error:", error);
     
     // Clean up uploaded file on error
-    if (req.file?.path && fs.existsSync(req.file.path)) {
-      fs.unlinkSync(req.file.path);
-    }
+  } catch (error) {
+    console.error("Email generation error:", error);
     
     res.status(500).json({ 
       error: "Failed to generate email",
       details: error.message 
     });
   }
-});
-
-// Email sending endpoint
-router.post("/send", upload.fields([
-  { name: 'csvFile', maxCount: 1 },
+}); name: 'csvFile', maxCount: 1 },
   { name: 'attachment0', maxCount: 1 },
   { name: 'attachment1', maxCount: 1 },
   { name: 'attachment2', maxCount: 1 },
@@ -207,10 +184,10 @@ router.post("/send", upload.fields([
         if (req.files) {
           Object.values(req.files).flat().forEach(file => {
             if (fs.existsSync(file.path)) {
-              fs.unlinkSync(file.path);
-            }
-          });
-        }
+    } else {
+      // Use server's configured email
+      if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
+        console.warn("Email credentials not configured");
         
         // Return mock success
         return res.json({
@@ -223,15 +200,6 @@ router.post("/send", upload.fields([
       emailUser = process.env.EMAIL_USER;
       emailPass = process.env.EMAIL_PASS;
       console.log(`Using server's email account: ${emailUser}`);
-    }
-
-    // Create nodemailer transporter with dynamic credentials
-    const transporter = nodemailer.createTransport({
-      service: "gmail",
-      auth: {
-        user: emailUser,
-        pass: emailPass
-      }
     });
 
     // Prepare attachments
@@ -244,6 +212,20 @@ router.post("/send", upload.fields([
           attachments.push({
             filename: file.originalname,
             path: file.path
+          });
+        }
+      }
+    }
+    // Prepare attachments
+    const attachments = [];
+    if (req.files) {
+      for (let i = 0; i < 5; i++) {
+        const attachmentKey = `attachment${i}`;
+        if (req.files[attachmentKey]) {
+          const file = req.files[attachmentKey][0];
+          attachments.push({
+            filename: file.originalname,
+            content: file.buffer // Use buffer content instead of path
           });
         }
       }
@@ -266,7 +248,8 @@ router.post("/send", upload.fields([
       
       recipients = await new Promise((resolve, reject) => {
         const results = [];
-        fs.createReadStream(csvFile.path)
+        // Create readable stream from buffer
+        Readable.from(csvFile.buffer)
           .pipe(csv())
           .on('data', (data) => {
             if (data.email) {
@@ -279,26 +262,15 @@ router.post("/send", upload.fields([
           .on('end', () => resolve(results))
           .on('error', reject);
       });
-    }
-
-    // Send emails
-    let successCount = 0;
-    let failCount = 0;
-
-    for (const recipient of recipients) {
-      try {
-        const mailOptions = {
-          from: `${senderName} <${senderEmail}>`,
-          to: recipient.email,
-          subject: subject,
-          html: body.replace(/\n/g, '<br>'),
-          attachments: attachments
-        };
+    }   };
 
         await transporter.sendMail(mailOptions);
         successCount++;
       } catch (error) {
-        console.error(`Failed to send to ${recipient.email}:`, error);
+        // Sanitize error log
+        const sanitizedError = { ...error };
+        if (sanitizedError.config?.auth) sanitizedError.config.auth.pass = '[REDACTED]';
+        console.error(`Failed to send to ${recipient.email}:`, sanitizedError.message || "Unknown error");
         failCount++;
       }
     }
@@ -316,13 +288,8 @@ router.post("/send", upload.fields([
       success: true,
       message: `Successfully sent ${successCount} email(s)${failCount > 0 ? `, ${failCount} failed` : ''}`,
       successCount,
-      failCount
-    });
-
-  } catch (error) {
-    console.error("Email sending error:", error);
-    
-    // Clean up uploaded files on error
+    // Clean up uploaded files - No longer needed with memory storage
+    /* 
     if (req.files) {
       Object.values(req.files).flat().forEach(file => {
         if (fs.existsSync(file.path)) {
@@ -330,6 +297,28 @@ router.post("/send", upload.fields([
         }
       });
     }
+    */
+
+    res.json({
+      success: true,
+      message: `Successfully sent ${successCount} email(s)${failCount > 0 ? `, ${failCount} failed` : ''}`,
+      successCount,
+      failCount
+    });
+
+  } catch (error) {
+    console.error("Email sending error:", error);
+    
+    // Clean up uploaded files on error - No longer needed
+    /*
+    if (req.files) {
+      Object.values(req.files).flat().forEach(file => {
+        if (fs.existsSync(file.path)) {
+          fs.unlinkSync(file.path);
+        }
+      });
+    }
+    */
     
     res.status(500).json({ 
       error: "Failed to send email",
@@ -337,5 +326,3 @@ router.post("/send", upload.fields([
     });
   }
 });
-
-export default router;

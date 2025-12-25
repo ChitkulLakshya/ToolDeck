@@ -6,8 +6,9 @@ import { PDFDocument, rgb } from 'pdf-lib';
 import { Upload, FileText, Save, Download, Trash2, FileDown } from 'lucide-react';
 import 'tldraw/tldraw.css';
 
-// Set worker source - using jsdelivr CDN with proper CORS headers
-pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdn.jsdelivr.net/npm/pdfjs-dist@${pdfjsLib.version}/build/pdf.worker.min.mjs`;
+// Set worker source - using local file for offline support and stability
+// NOTE: If you update pdfjs-dist, you MUST copy the new worker file to public/pdf.worker.min.mjs
+pdfjsLib.GlobalWorkerOptions.workerSrc = '/pdf.worker.min.mjs';
 
 // Component for toolbar controls - no longer needs to be inside Tldraw
 const PDFEditorControls = ({ editor, onFileLoaded, toast }) => {
@@ -57,73 +58,111 @@ const PDFEditorControls = ({ editor, onFileLoaded, toast }) => {
       
       let currentY = 0;
 
-      // Loop through each page
-      for (let pageNum = 1; pageNum <= numPages; pageNum++) {
-        const page = await pdf.getPage(pageNum);
-        const viewport = page.getViewport({ scale });
+      const numPages = pdf.numPages;
+      const scale = 1.5; // Scale for better quality (reduced from 2.0 for performance)
+      
+      let currentY = 0;
+      
+      // Progressive Loading Configuration
+      const BATCH_SIZE = 3; // Number of pages to load initially
+      const DELAY_BETWEEN_PAGES = 100; // ms delay to keep UI responsive
 
-        // Create in-memory canvas
-        const canvas = document.createElement('canvas');
-        const context = canvas.getContext('2d', { willReadFrequently: false });
-        canvas.height = viewport.height;
-        canvas.width = viewport.width;
+      // Helper function to render a single page
+      const renderPage = async (pageNum) => {
+        try {
+          const page = await pdf.getPage(pageNum);
+          const viewport = page.getViewport({ scale });
 
-        // Render page to canvas
-        const renderContext = {
-          canvasContext: context,
-          viewport: viewport,
-        };
+          // Create in-memory canvas
+          const canvas = document.createElement('canvas');
+          const context = canvas.getContext('2d', { willReadFrequently: false });
+          canvas.height = viewport.height;
+          canvas.width = viewport.width;
 
-        await page.render(renderContext).promise;
+          // Render page to canvas
+          const renderContext = {
+            canvasContext: context,
+            viewport: viewport,
+          };
 
-        // Get dataURL from canvas
-        const dataUrl = canvas.toDataURL('image/png', 0.9); // Add compression quality
+          await page.render(renderContext).promise;
 
-        // Create a unique asset ID
-        const assetId = `asset:${Date.now()}_${pageNum}`;
-        
-        // Create the asset
-        editor.createAssets([{
-          id: assetId,
-          type: 'image',
-          typeName: 'asset',
-          props: {
-            name: `page-${pageNum}.png`,
-            src: dataUrl,
-            w: viewport.width,
-            h: viewport.height,
-            mimeType: 'image/png',
-            isAnimated: false,
-          },
-          meta: {},
-        }]);
+          // Get dataURL from canvas
+          const dataUrl = canvas.toDataURL('image/png', 0.8); // Reduced quality slightly for performance
 
-        // Create image shape on tldraw canvas with the asset
-        editor.createShape({
-          type: 'image',
-          x: 50, // Add some padding from left
-          y: currentY,
-          props: {
-            w: viewport.width,
-            h: viewport.height,
-            assetId: assetId,
-          },
-          meta: {
-            pageNumber: pageNum,
-          },
-        });
+          // Create a unique asset ID
+          const assetId = `asset:${Date.now()}_${pageNum}`;
+          
+          // Create the asset
+          editor.createAssets([{
+            id: assetId,
+            type: 'image',
+            typeName: 'asset',
+            props: {
+              name: `page-${pageNum}.png`,
+              src: dataUrl,
+              w: viewport.width,
+              h: viewport.height,
+              mimeType: 'image/png',
+              isAnimated: false,
+            },
+            meta: {},
+          }]);
 
-        // Position next page vertically below
-        currentY += viewport.height + 50; // Add some spacing between pages
+          // Create image shape on tldraw canvas with the asset
+          editor.createShape({
+            type: 'image',
+            x: 50, // Add some padding from left
+            y: currentY,
+            props: {
+              w: viewport.width,
+              h: viewport.height,
+              assetId: assetId,
+            },
+            meta: {
+              pageNumber: pageNum,
+            },
+          });
+
+          // Update Y position for next page
+          currentY += viewport.height + 50;
+          
+          // Clean up canvas to free memory
+          canvas.width = 0;
+          canvas.height = 0;
+          
+          return true;
+        } catch (err) {
+          console.error(`Error rendering page ${pageNum}:`, err);
+          return false;
+        }
+      };
+
+      // 1. Load initial batch immediately
+      toast.info(`Rendering first ${Math.min(BATCH_SIZE, numPages)} pages...`);
+      
+      for (let i = 1; i <= Math.min(BATCH_SIZE, numPages); i++) {
+        await renderPage(i);
       }
 
-      // Zoom to fit all pages
-      editor.zoomToFit();
-      
-      // Notify parent that file is loaded AFTER successful rendering
+      // Notify parent that file is loaded (UI becomes interactive)
       onFileLoaded(true);
-      
-      toast.success(`PDF loaded successfully: ${numPages} page(s)`);
+      editor.zoomToFit();
+      toast.success(`PDF loaded! Rendering remaining pages in background...`);
+
+      // 2. Load remaining pages in background
+      if (numPages > BATCH_SIZE) {
+        const loadRemainingPages = async () => {
+          for (let i = BATCH_SIZE + 1; i <= numPages; i++) {
+            await new Promise(resolve => setTimeout(resolve, DELAY_BETWEEN_PAGES)); // Yield to main thread
+            await renderPage(i);
+          }
+          toast.success("All pages rendered successfully");
+        };
+        
+        // Start background loading without awaiting
+        loadRemainingPages();
+      }
     } catch (error) {
       console.error('Error loading PDF:', error);
       

@@ -287,13 +287,20 @@ const EmailPage = () => {
                           type="password"
                           value={senderPassword}
                           onChange={(e) => setSenderPassword(e.target.value)}
+                          autoComplete="new-password"
                           className="w-full px-4 py-3 border-2 border-border rounded-xl focus:ring-2 focus:ring-primary-accent focus:border-primary-accent bg-background text-text-body"
                           placeholder="••••••••••••••••"
                           required
                         />
-                        <p className="text-xs text-text-muted mt-2">
-                          💡 For Gmail: Use <a href="https://myaccount.google.com/apppasswords" target="_blank" rel="noopener noreferrer" className="text-primary-accent hover:underline">App Password</a> (not your regular password)
-                        </p>
+                        <div className="mt-2 p-3 bg-yellow-500/10 border border-yellow-500/20 rounded-lg">
+                          <p className="text-xs text-yellow-600 dark:text-yellow-400 font-medium flex items-start gap-2">
+                            <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
+                            <span>
+                              <strong>Security Warning:</strong> Do NOT use your main Google password. 
+                              You must generate an <a href="https://myaccount.google.com/apppasswords" target="_blank" rel="noopener noreferrer" className="underline hover:text-yellow-500">App Password</a>.
+                            </span>
+                          </p>
+                        </div>
                       </div>
                     </div>
                   )}

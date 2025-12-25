@@ -15,6 +15,9 @@ const __dirname = path.dirname(__filename);
 
 const app = express();
 
+// Trust proxy is required for rate limiting to work correctly behind load balancers (e.g. Vercel, Heroku)
+app.set('trust proxy', 1);
+
 // ============================================
 // MIDDLEWARE CONFIGURATION
 // ============================================
