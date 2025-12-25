@@ -95,11 +95,6 @@ Return ONLY JSON: {"subject": "your subject here", "body": "your email body here
 
     let result;
     
-    if (imagePath) {
-      // Read image and convert to base64
-      const imageData = fs.readFileSync(imagePath);
-    let result;
-    
     if (imageBuffer) {
       // Convert buffer to base64
       const base64Image = imageBuffer.toString('base64');
@@ -115,7 +110,12 @@ Return ONLY JSON: {"subject": "your subject here", "body": "your email body here
       ]);
     } else {
       result = await model.generateContent(prompt);
-    }onst jsonMatch = responseText.match(/\{[\s\S]*\}/);
+    }
+
+    const responseText = result.response.text();
+    
+    // Extract JSON from response
+    const jsonMatch = responseText.match(/\{[\s\S]*\}/);
     if (!jsonMatch) {
       throw new Error("Invalid AI response format");
     }
