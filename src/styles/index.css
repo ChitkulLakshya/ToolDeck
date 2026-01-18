@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -9,51 +11,53 @@
 /* 1. Light Mode Colors (Default) */
 :root {
   /* Backgrounds */
-  --color-background: #ffffff; /* White */
-  --color-card-background: #f9fafb; /* Off-white */
+  --color-background: #F3F4F6; /* Cool Gray 100 - Industrial Paper */
+  --color-card-background: #FFFFFF; /* White */
+  --color-card-hover: #F9FAFB;
   
   /* Accents */
-  --color-primary-accent: #3B82F6; /* Electric Blue */
-  --color-secondary-accent: #2DD4BF; /* Teal */
+  --color-primary-accent: #FF4500; /* International Orange style */
+  --color-secondary-accent: #4F46E5; /* Indigo */
   
   /* Text */
   --color-text-heading: #111827; /* Charcoal */
-  --color-text-body: #374151; /* Medium Gray */
-  --color-text-muted: #6B7280; /* Light Gray */
+  --color-text-body: #374151; /* Gray 700 */
+  --color-text-muted: #6B7280; /* Gray 500 */
   
   /* Borders & Dividers */
-  --color-border: #e5e7eb; /* Light Gray */
+  --color-border: #E5E7EB;
   
   /* Status Colors */
-  --color-success: #10b981; /* Green */
-  --color-warning: #f59e0b; /* Orange */
-  --color-error: #ef4444; /* Red */
-  --color-info: #3B82F6; /* Blue */
+  --color-success: #059669; 
+  --color-warning: #D97706; 
+  --color-error: #DC2626; 
+  --color-info: #2563EB; 
 }
 
 /* 2. Dark Mode Colors */
 .dark {
   /* Backgrounds */
-  --color-background: #111827; /* Charcoal */
-  --color-card-background: #1F2937; /* Lighter Charcoal */
+  --color-background: #111111; /* Near Black */
+  --color-card-background: #1A1A1A; /* Dark material */
+  --color-card-hover: #222222;
   
   /* Accents */
-  --color-primary-accent: #3B82F6; /* Electric Blue (same in both modes) */
-  --color-secondary-accent: #2DD4BF; /* Teal (same in both modes) */
+  --color-primary-accent: #FF5400; /* Vibrant Orange */
+  --color-secondary-accent: #6366F1; /* Indigo */
   
   /* Text */
-  --color-text-heading: #F9FAFB; /* Near-white */
-  --color-text-body: #D1D5DB; /* Lighter Gray */
-  --color-text-muted: #9CA3AF; /* Medium Gray */
+  --color-text-heading: #FFFFFF; 
+  --color-text-body: #A1A1AA; /* Zinc 400 */
+  --color-text-muted: #71717A; /* Zinc 500 */
   
   /* Borders & Dividers */
-  --color-border: #374151; /* Dark Gray */
+  --color-border: #333333;
   
   /* Status Colors */
-  --color-success: #10b981; /* Green (same in both modes) */
-  --color-warning: #f59e0b; /* Orange (same in both modes) */
-  --color-error: #ef4444; /* Red (same in both modes) */
-  --color-info: #3B82F6; /* Blue (same in both modes) */
+  --color-success: #10b981; 
+  --color-warning: #f59e0b; 
+  --color-error: #ef4444; 
+  --color-info: #3B82F6; 
 }
 
 /* Dark mode transitions */

@@ -6,22 +6,36 @@ module.exports = {
   darkMode: 'class', // Enable class-based dark mode
   theme: {
     extend: {
+      fontFamily: {
+        sans: ['Inter', 'sans-serif'],
+        mono: ['"Space Mono"', 'monospace'],
+      },
       colors: {
         // Semantic color tokens mapped to CSS variables
         'background': 'var(--color-background)',
         'card-background': 'var(--color-card-background)',
-        'primary-accent': 'var(--color-primary-accent)',
+        'card-hover': 'var(--color-card-hover)', // Added for interaction
+
+        // Brand Palette
+        'primary-accent': 'var(--color-primary-accent)', // International Orange
         'secondary-accent': 'var(--color-secondary-accent)',
+
+        // Text
         'text-heading': 'var(--color-text-heading)',
         'text-body': 'var(--color-text-body)',
         'text-muted': 'var(--color-text-muted)',
+
+        // Structural
         'border': 'var(--color-border)',
-        
+
         // Status colors
         'success': 'var(--color-success)',
         'warning': 'var(--color-warning)',
         'error': 'var(--color-error)',
         'info': 'var(--color-info)',
+      },
+      backgroundImage: {
+        'noise': "url('../assets/texture-grain.png')",
       },
       animation: {
         'fade-in': 'fadeIn 0.5s ease-in-out',
