@@ -42,3 +42,6 @@ We will generate specific assets to replace the code-only look:
 2.  **Tailwind Config:** Extend theme with new font families and "noise" background utilities.
 3.  **Generate Assets:** Use `Nano Banana Pro` for backgrounds.
 4.  **Refactor `HomePage`:** Implement the "Bento" grid and editorial typography.
+
+
+abcd
